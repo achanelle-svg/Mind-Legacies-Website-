@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Mind Legacies</title>
+<meta name="description" content="Get in touch with Mind Legacies for SYNAPSIS demo requests, partnerships, funding, or general enquiries.">
+<link rel="icon" href="assets/ml-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .contact-grid{ display:grid; grid-template-columns: 1fr 1.3fr; gap:64px; }
+  @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; } }
+  .field{ margin-bottom: 20px; }
+  .field label{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--grey); display:block; margin-bottom:8px; }
+  .field input, .field select, .field textarea{
+    width:100%; background: var(--black); border:1px solid var(--line);
+    color: var(--paper); padding:14px 16px; font-family: var(--body);
+    font-size: 0.95rem; border-radius:2px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color: var(--gold); }
+  .field textarea{ min-height:130px; resize:vertical; }
+  .form-status{ margin-top:16px; font-size:0.9rem; }
+  .form-status.success{ color: var(--gold); }
+  .form-status.error{ color: #d98b8b; }
+  .contact-info-item{ padding: 20px 0; border-top:1px solid var(--line); }
+  .contact-info-item:first-child{ border-top:none; padding-top:0; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand-mark">
+      <img src="assets/ml-logo.png" alt="Mind Legacies">
+      <span>Intelligence · Innovation · Legacy</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="synapsis.html">SYNAPSIS</a>
+      <a href="afronovari.html">AfroNovari</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-hero" style="padding-bottom:60px;">
+    <div class="pattern-bg"></div>
+    <div class="gradient-fade"></div>
+    <div class="container">
+      <span class="eyebrow">Get In Touch</span>
+      <h1>Let's talk about<br><span class="text-gold">what you're building.</span></h1>
+      <p class="lede">Whether it's a SYNAPSIS demo, a Discovery Session, a partnership, or a general enquiry — tell us what you need and we'll follow up directly.</p>
+    </div>
+  </section>
+
+  <section class="section" style="border-bottom:none;">
+    <div class="container contact-grid">
+
+      <div class="reveal">
+        <span class="eyebrow">Direct Contact</span>
+        <div class="mt-24">
+          <div class="contact-info-item">
+            <span class="mono-tag">Phone</span>
+            <p style="margin-top:6px;"><a href="tel:0631599133" style="color:var(--paper);">063 159 9133</a></p>
+          </div>
+          <div class="contact-info-item">
+            <span class="mono-tag">Address</span>
+            <p style="margin-top:6px; color:var(--paper);">50 Jim Fouché, Universitas,<br>Bloemfontein, Free State, South Africa</p>
+          </div>
+          <div class="contact-info-item">
+            <span class="mono-tag">Registration</span>
+            <p style="margin-top:6px; color:var(--paper);">Mind Legacies (Pty) Ltd<br>Reg. 2025/852961/07</p>
+          </div>
+          <div class="contact-info-item">
+            <span class="mono-tag">Enquiry Types</span>
+            <p style="margin-top:6px; color:var(--grey); font-size:0.92rem;">SYNAPSIS demo requests · Discovery Sessions · partnerships · funding · AfroNovari waitlist · general enquiries</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="field">
+            <label for="field-name">Name</label>
+            <input type="text" id="field-name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="field-email">Email</label>
+            <input type="email" id="field-email" name="email" required>
+          </div>
+          <div class="field">
+            <label for="field-company">Company / Organisation</label>
+            <input type="text" id="field-company" name="company">
+          </div>
+          <div class="field">
+            <label for="field-subject">What's this about?</label>
+            <select id="field-subject" name="subject">
+              <option>SYNAPSIS Demo Request</option>
+              <option>SYNAPSIS Discovery Session</option>
+              <option>Partnership Enquiry</option>
+              <option>Investment / Funding</option>
+              <option>AfroNovari</option>
+              <option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="field-message">Message</label>
+            <textarea id="field-message" name="message" required placeholder="Tell us a bit about what you need..."></textarea>
+          </div>
+          <input type="hidden" name="_subject" value="New enquiry from mindlegacies.com">
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message <span class="btn-arrow">→</span></button>
+          <p id="form-status" class="form-status"></p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/ml-logo.png" alt="Mind Legacies">
+        <p>Building the next generation of identity-centered cognitive infrastructure.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="synapsis.html">SYNAPSIS</a>
+        <a href="afronovari.html">AfroNovari</a>
+        <a href="about.html">About</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <a href="tel:0631599133">063 159 9133</a>
+        <p>50 Jim Fouché, Universitas, Bloemfontein, FS</p>
+      </div>
+      <div>
+        <h5>Registration</h5>
+        <p>Mind Legacies (Pty) Ltd</p>
+        <p>Reg. 2025/852961/07</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Mind Legacies (Pty) Ltd. All rights reserved.</span>
+      <span>Intelligence · Innovation · Legacy</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

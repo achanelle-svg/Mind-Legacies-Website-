@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfroNovari — Grow Your Crown | Coming Soon</title>
+<meta name="description" content="AfroNovari is a premium Afro-futuristic haircare brand launching soon from Mind Legacies.">
+<link rel="icon" href="assets/ml-logo.png">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .afro-hero{
+    position:relative;
+    min-height: 78vh;
+    display:flex;
+    align-items:center;
+    padding: 160px var(--pad) 80px;
+    overflow:hidden;
+  }
+  .afro-hero .bg{
+    position:absolute; inset:0;
+    background-image:url('assets/afronovari-collage.jpg');
+    background-size:cover;
+    background-position: center 20%;
+    opacity: 0.4;
+  }
+  .afro-hero .overlay{
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(12,21,25,0.55) 0%, var(--black) 96%);
+  }
+  .afro-hero .container{ position:relative; z-index:2; }
+  .waitlist-box{
+    border:1px solid var(--line-strong);
+    background: var(--navy);
+    padding: 40px;
+    max-width: 520px;
+  }
+  .waitlist-box input{
+    width:100%;
+    background: var(--black);
+    border: 1px solid var(--line);
+    color: var(--paper);
+    padding: 14px 16px;
+    font-family: var(--body);
+    font-size: 0.95rem;
+    margin-top: 16px;
+    border-radius: 2px;
+  }
+  .waitlist-box input:focus{ outline:none; border-color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand-mark">
+      <img src="assets/ml-logo.png" alt="Mind Legacies">
+      <span>Intelligence · Innovation · Legacy</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="synapsis.html">SYNAPSIS</a>
+      <a href="afronovari.html" class="active">AfroNovari</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="afro-hero">
+    <div class="bg"></div>
+    <div class="overlay"></div>
+    <div class="container">
+      <span class="eyebrow">A Mind Legacies Venture · Launching Soon</span>
+      <h1 class="mt-16" style="font-size:clamp(2.4rem,6vw,4.2rem);">AfroNovari</h1>
+      <p class="lede" style="font-style:italic; color:var(--gold); font-family:var(--display); font-size:1.4rem;">Grow Your Crown.</p>
+      <p class="lede mt-16">A premium Afro-futuristic haircare brand combining botanical performance with emotionally intelligent, culturally rooted design. Power, mystery, and allure — bottled.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" style="gap:64px; align-items:center;">
+        <div class="reveal">
+          <span class="eyebrow">Coming Soon</span>
+          <h2 class="mt-16">Be the first to know when AfroNovari launches.</h2>
+          <p class="text-grey mt-16">AfroNovari hasn't launched yet — we're finalising the first product line before opening it up. Leave your email and we'll let you know the moment it's live.</p>
+        </div>
+        <form class="waitlist-box reveal" id="waitlist-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <span class="mono-tag">Join the waitlist</span>
+          <input type="email" name="email" placeholder="you@email.com" required>
+          <input type="hidden" name="_subject" value="AfroNovari Waitlist Signup">
+          <button type="submit" class="btn btn-primary mt-16" style="width:100%; justify-content:center;">Notify Me <span class="btn-arrow">→</span></button>
+          <p id="waitlist-status" class="mt-16" style="font-size:0.85rem;"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-navy" style="border-bottom:none;">
+    <div class="container center">
+      <span class="eyebrow" style="justify-content:center;">In the meantime</span>
+      <h2 class="mt-16" style="font-size:clamp(1.6rem,3vw,2.2rem);">Explore SYNAPSIS, the system already live under Mind Legacies.</h2>
+      <div class="mt-32">
+        <a href="synapsis.html" class="btn btn-primary">View SYNAPSIS <span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/ml-logo.png" alt="Mind Legacies">
+        <p>AfroNovari is a Mind Legacies venture, currently in pre-launch.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="about.html">About</a>
+        <a href="index.html">Home</a>
+        <a href="synapsis.html">SYNAPSIS</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <a href="contact.html">Get in touch</a>
+        <a href="tel:0631599133">063 159 9133</a>
+        <p>50 Jim Fouché, Universitas, Bloemfontein, FS</p>
+      </div>
+      <div>
+        <h5>Registration</h5>
+        <p>Mind Legacies (Pty) Ltd</p>
+        <p>Reg. 2025/852961/07</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Mind Legacies (Pty) Ltd. All rights reserved.</span>
+      <span>Intelligence · Innovation · Legacy</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // Separate lightweight handler for the waitlist form (same Formspree pattern as contact form)
+  document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const status = document.getElementById('waitlist-status');
+    const btn = form.querySelector('button');
+    const original = btn.textContent;
+    btn.textContent = 'Sending…'; btn.disabled = true;
+    try {
+      const res = await fetch(form.action, { method:'POST', body:new FormData(form), headers:{Accept:'application/json'} });
+      if(res.ok){
+        form.reset();
+        status.textContent = "You're on the list — we'll email you at launch.";
+        status.style.color = 'var(--gold)';
+      } else { throw new Error(); }
+    } catch(err){
+      status.textContent = 'Something went wrong — please try again.';
+      status.style.color = '#d98b8b';
+    } finally {
+      btn.textContent = original; btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
