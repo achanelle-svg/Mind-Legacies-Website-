@@ -41,39 +41,30 @@ Right now the forms are wired to a placeholder address. To make them work:
 
 ---
 
-## 3. Add your photo to the Founder Story section
+## 3. Your phone number
 
-1. Add your photo to the `assets` folder, named exactly `amantle-pitso.jpg`.
-2. Open **`index.html`**, find this block:
-   ```html
-   <div class="founder-photo">
-     <!-- Replace this placeholder with a photo: assets/amantle-pitso.jpg -->
-     <div class="placeholder">
-       ...
-     </div>
-   </div>
-   ```
-3. Replace the whole `<div class="placeholder">...</div>` block with:
-   ```html
-   <img src="assets/amantle-pitso.jpg" alt="Amantle Pitso">
-   ```
-4. Commit the change.
+The site currently shows "Phone: coming soon" wherever a phone number would go (footer, About, Contact). Once you have a dedicated Mind Legacies number, search each `.html` file for the text `Phone: coming soon` and replace it with a real link, e.g.:
+```html
+<a href="tel:0123456789">012 345 6789</a>
+```
 
----
+## 4. Editing team & hiring info
 
-## 4. What's already in the site
+The clickable team/role cards (on the SYNAPSIS and About pages) pull their text from one place: `js/main.js`, near the top, in a section called `const ROLES = { ... }`. To update a role's description, status ("hiring" / "vacant" / "filled"), or add a name once someone's hired, edit the matching entry there — every page using that role updates automatically.
 
-- **Home** — hero, brand pillars, company brief, founder story (placeholder photo + bio — please review the pull-quote wording, it's a first draft), SYNAPSIS + AfroNovari preview cards.
-- **SYNAPSIS** — what it is (kept high-level to protect the underlying architecture), applications, the V0A (live) / V0B (coming soon) roadmap, the 4-stage commercial engagement model, and the R15,000 Discovery Session pricing card. "Request a Demo" and "Book a Discovery Session" both route to the Contact page with the subject pre-filled.
+## 5. What's already in the site
+
+- **Home** — hero, brand pillars, the tensegrity-based company brief, founder story (your photo + story + quote), SYNAPSIS + AfroNovari preview cards.
+- **SYNAPSIS** — positioned as an IP System Venture within the Mind Legacies portfolio (kept high-level to protect the underlying architecture), its three divisions (Technology, Science, Operations) with clickable leadership roles, a "Now Hiring" section for the Technology Lead and Business Development Lead, applications, the V0A (live) / V0B (coming soon) roadmap, the 4-stage commercial engagement model, and the R15,000 Discovery Session pricing card.
 - **AfroNovari** — coming-soon teaser with waitlist signup form.
-- **About** — full company profile: vision, mission, dual-division org structure, industry applications, registration details.
-- **Contact** — form with a dropdown for enquiry type, plus your phone/address/registration info.
+- **About** — the tensegrity model, the three venture categories (IP System Ventures / Type A / Type B subsidiaries), leadership, a "Now Hiring" section for the Operations Lead and Finance Lead (both hired directly by Mind Legacies), and registration details.
+- **Contact** — form with a dropdown for enquiry type, plus your email/address/registration info. "Request a Demo," "Book a Discovery Session," and every "I'm Interested — Apply" button route here with the subject pre-filled.
 
-## 5. Editing text or colours later
+## 6. Editing text or colours later
 
 - All page copy is plain text inside each `.html` file — open in GitHub's editor and change directly.
 - Colours, fonts, and spacing all live in `css/style.css` at the top under `:root{ }` if you ever want to adjust the palette.
 
-## 6. Local preview (optional)
+## 7. Local preview (optional)
 
 If you want to preview changes before pushing to GitHub, just double-click `index.html` — it opens directly in your browser from your computer.

@@ -286,6 +286,23 @@ section{ position: relative; }
   transition: opacity .4s ease, transform .5s ease;
 }
 .sub-card:hover .sub-bg{ opacity: 0.75; transform: scale(1.04); }
+.sub-card .sub-logo-panel{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background: var(--navy);
+  padding: 40px;
+  transition: transform .5s ease;
+}
+.sub-card:hover .sub-logo-panel{ transform: scale(1.03); }
+.sub-card .sub-logo-panel img{
+  max-width: 62%;
+  max-height: 62%;
+  object-fit: contain;
+}
+.sub-card .sub-logo-panel.fill{ padding:0; }
+.sub-card .sub-logo-panel.fill img{
+  max-width:100%; max-height:100%; width:100%; height:100%; object-fit:cover;
+}
 .sub-card .sub-overlay{
   position:absolute; inset:0;
   background: linear-gradient(180deg, rgba(12,21,25,0.15) 0%, rgba(12,21,25,0.96) 90%);
@@ -431,3 +448,76 @@ section{ position: relative; }
 /* fade-in on scroll */
 .reveal{ opacity:0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.is-visible{ opacity:1; transform:none; }
+
+/* ---------- Team / role chips (clickable) ---------- */
+.team-chip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 16px;
+  background: var(--black);
+  border: 1px solid var(--line-strong);
+  padding: 18px 22px;
+  cursor:pointer;
+  transition: border-color .2s ease, background .2s ease;
+  text-align:left;
+  width:100%;
+  font-family: var(--body);
+  color: var(--paper);
+}
+.team-chip:hover{ border-color: var(--gold); background: var(--navy); }
+.team-chip .chip-name{ font-family: var(--mono); font-size: 12px; letter-spacing:.08em; text-transform:uppercase; }
+.team-chip .chip-status{ font-size: 11px; font-family: var(--mono); letter-spacing:.06em; text-transform:uppercase; color: var(--grey); }
+.team-chip .chip-status.hiring{ color: var(--gold); }
+.team-chip .chip-arrow{ color: var(--gold); flex-shrink:0; }
+
+.hiring-card{
+  border: 1px solid var(--line-strong);
+  padding: 30px;
+  background: linear-gradient(160deg, var(--navy), var(--black));
+  cursor:pointer;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.hiring-card:hover{ border-color: var(--gold); transform: translateY(-2px); }
+.hiring-card .status-dot{ display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color: var(--gold); }
+.hiring-card .status-dot::before{ content:''; width:7px; height:7px; border-radius:50%; background: var(--gold); animation: pulse 2s infinite; }
+@keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+.hiring-card h3{ font-size:1.25rem; margin-top:14px; }
+.hiring-card p{ color: var(--grey); margin-top:10px; font-size:0.92rem; }
+.hiring-card .chip-id{ font-family:var(--mono); font-size:11px; color:var(--grey); margin-top:14px; display:block; }
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position: fixed; inset:0; z-index:1000;
+  background: rgba(12,21,25,0.88);
+  backdrop-filter: blur(4px);
+  display:none;
+  align-items:center; justify-content:center;
+  padding: 24px;
+}
+.modal-overlay.open{ display:flex; }
+.modal-box{
+  background: var(--navy);
+  border: 1px solid var(--line-strong);
+  max-width: 560px;
+  width:100%;
+  max-height: 85vh;
+  overflow-y:auto;
+  padding: 40px;
+  position: relative;
+}
+.modal-close{
+  position:absolute; top:20px; right:20px;
+  background:none; border:none; color: var(--grey);
+  font-size: 20px; cursor:pointer; line-height:1;
+}
+.modal-close:hover{ color: var(--gold); }
+.modal-box h3{ font-size: 1.5rem; margin-top:10px; padding-right:30px; }
+.modal-box .modal-id{ font-family: var(--mono); font-size:11px; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; }
+.modal-box .modal-body p{ color: var(--grey); font-size: 0.95rem; margin-top:14px; line-height:1.65; }
+.modal-box .modal-body strong{ color: var(--paper); }
+.modal-box .vacant-badge{
+  display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color: var(--grey); border:1px solid var(--line-strong); padding:5px 12px; margin-top:16px;
+}
+.modal-box .btn{ margin-top:24px; }
