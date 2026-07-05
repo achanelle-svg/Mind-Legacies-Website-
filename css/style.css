@@ -445,9 +445,9 @@ section{ position: relative; }
 .center{ text-align:center; }
 .mt-8{ margin-top:8px;} .mt-16{ margin-top:16px;} .mt-24{ margin-top:24px;} .mt-32{ margin-top:32px;}
 
-/* fade-in on scroll */
-.reveal{ opacity:0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
-.reveal.is-visible{ opacity:1; transform:none; }
+.reveal{ opacity:1; transform:none; }
+.reveal.js-ready{ opacity:0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.js-ready.is-visible{ opacity:1; transform:none; }
 
 /* ---------- Team / role chips (clickable) ---------- */
 .team-chip{
