@@ -70,7 +70,7 @@ const ROLES = {
       ${VOLUNTEER_INFO}
     `,
     applyRe: 'Finance Lead (ML-004) — Application'
-  }
+  },
   'exec-ops-associate': {
     title: 'Executive Operations Associate',
     id: 'ML-005',
