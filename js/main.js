@@ -130,9 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
-  // Scroll reveal
+  // Scroll reveal — elements are visible by default (see CSS); this only adds
+  // the animated fade-in on top, so a JS error can never hide content.
   const revealEls = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window && revealEls.length) {
+    revealEls.forEach(el => el.classList.add('js-ready'));
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -142,8 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { threshold: 0.15 });
     revealEls.forEach(el => io.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('is-visible'));
   }
 
   // Contact / demo request form (Formspree)
