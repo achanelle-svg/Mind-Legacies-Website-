@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Legacies — Recruitment Gateway</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #080c0f;
+  --deep: #0C1519;
+  --surf: #162127;
+  --mid: #3A3534;
+  --gold: #CF9D7B;
+  --gold-dim: rgba(207,157,123,0.3);
+  --gold-ghost: rgba(207,157,123,0.07);
+  --silver: #8B908E;
+  --white: #F0ECE4;
+  --white-dim: rgba(240,236,228,0.6);
+  --light: #F5F1EC;
+  --success: #2D6A4F;
+  --error: #8B2020;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--deep);
+  color: var(--white);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(207,157,123,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(207,157,123,0.02) 1px, transparent 1px);
+  background-size:72px 72px;
+  pointer-events:none; z-index:0;
+}
+
+/* ── GATE SCREEN ── */
+.gate-screen {
+  position:fixed; inset:0; z-index:1000;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:var(--deep); text-align:center; padding:24px;
+}
+.gate-screen.hidden { display:none; }
+.gate-logo { width:36px; height:36px; margin-bottom:28px; }
+.gate-eyebrow { font-size:8px; letter-spacing:0.5em; color:var(--gold); margin-bottom:20px; }
+.gate-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(30px,5vw,44px); font-weight:300;
+  color:var(--white); margin-bottom:12px;
+}
+.gate-title em { font-style:italic; color:var(--gold); }
+.gate-desc {
+  font-family:'Cormorant Garamond', serif;
+  font-size:15px; color:var(--white-dim); max-width:420px;
+  line-height:1.7; margin-bottom:36px;
+}
+.gate-form { display:flex; flex-direction:column; align-items:center; gap:18px; width:100%; max-width:320px; }
+.gate-input {
+  width:100%; background:rgba(22,33,39,0.8);
+  border:1px solid rgba(207,157,123,0.25); border-radius:2px;
+  color:var(--white); font-family:'Josefin Sans', sans-serif;
+  font-size:12px; letter-spacing:0.15em; text-align:center;
+  padding:16px 18px; outline:none;
+}
+.gate-input:focus { border-color:rgba(207,157,123,0.6); }
+.gate-btn {
+  width:100%; background:transparent; border:1px solid var(--gold);
+  color:var(--gold); font-family:'Josefin Sans',sans-serif;
+  font-size:9px; font-weight:300; letter-spacing:0.4em;
+  padding:16px; cursor:pointer; transition:all 0.3s;
+}
+.gate-btn:hover { background:var(--gold); color:var(--deep); }
+.gate-error {
+  font-size:10px; letter-spacing:0.2em; color:var(--error);
+  margin-top:4px; display:none;
+}
+.gate-error.show { display:block; }
+
+/* ── HEADER ── */
+.site-header {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:20px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(207,157,123,0.1);
+  background:rgba(8,12,15,0.95);
+  backdrop-filter:blur(12px);
+}
+.logo-wrap { display:flex; align-items:center; gap:14px; }
+.logo-svg { width:32px; height:32px; }
+.logo-text .name { font-size:11px; letter-spacing:0.28em; color:var(--gold); display:block; }
+.logo-text .tag  { font-size:7px;  letter-spacing:0.3em;  color:var(--silver); margin-top:2px; display:block; }
+.header-right { font-size:7px; letter-spacing:0.35em; color:var(--silver); text-align:right; line-height:1.9; }
+.header-right span { color:var(--gold); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  position:fixed; top:64px; left:0; right:0; z-index:99;
+  height:2px; background:rgba(207,157,123,0.1);
+}
+.progress-fill {
+  height:100%; background:var(--gold);
+  width:0%; transition:width 0.5s ease;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh; position:relative; z-index:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:120px 48px 80px;
+}
+.hero-eyebrow {
+  font-size:8px; letter-spacing:0.55em; color:var(--gold);
+  margin-bottom:32px;
+  animation:fadeUp 0.9s ease 0.2s both;
+}
+.hero-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(52px,8vw,100px);
+  font-weight:300; line-height:0.92;
+  color:var(--white); margin-bottom:6px;
+  animation:fadeUp 0.9s ease 0.4s both;
+}
+.hero-title em { font-style:italic; color:var(--gold); }
+.hero-sub {
+  font-size:8px; letter-spacing:0.45em; color:var(--silver);
+  margin-bottom:44px;
+  animation:fadeUp 0.9s ease 0.6s both;
+}
+.hero-vline {
+  width:1px; height:52px;
+  background:linear-gradient(180deg,transparent,var(--gold),transparent);
+  margin:0 auto 44px;
+  animation:fadeUp 0.9s ease 0.8s both;
+}
+.hero-desc {
+  font-family:'Cormorant Garamond', serif;
+  font-size:18px; font-weight:300; color:var(--white-dim);
+  max-width:520px; line-height:1.75; margin:0 auto 56px;
+  animation:fadeUp 0.9s ease 1s both;
+}
+.hero-meta {
+  display:flex; gap:40px; justify-content:center;
+  animation:fadeUp 0.9s ease 1.2s both;
+}
+.hero-meta-item { text-align:center; }
+.hero-meta-item .val { font-size:22px; font-weight:300; color:var(--gold); font-family:'Cormorant Garamond',serif; display:block; }
+.hero-meta-item .lbl { font-size:7px; letter-spacing:0.35em; color:var(--silver); margin-top:4px; display:block; }
+.start-btn {
+  display:inline-block; margin-top:52px;
+  background:transparent; border:1px solid var(--gold);
+  color:var(--gold); font-family:'Josefin Sans',sans-serif;
+  font-size:9px; font-weight:300; letter-spacing:0.45em;
+  padding:18px 52px; cursor:pointer;
+  position:relative; overflow:hidden;
+  transition:color 0.35s; text-decoration:none;
+  animation:fadeUp 0.9s ease 1.4s both;
+}
+.start-btn::before {
+  content:''; position:absolute; inset:0;
+  background:var(--gold); transform:translateX(-101%);
+  transition:transform 0.35s ease;
+}
+.start-btn:hover::before { transform:translateX(0); }
+.start-btn:hover { color:var(--deep); }
+.start-btn span { position:relative; z-index:1; }
+
+/* ── FORM WRAPPER ── */
+.form-outer {
+  display:none; position:relative; z-index:1;
+  min-height:100vh; padding:100px 24px 80px;
+}
+.form-outer.active { display:block; }
+.form-inner { max-width:780px; margin:0 auto; }
+
+/* ── SECTION HEADERS ── */
+.section-wrap { margin-bottom:60px; }
+.section-wrap.hidden { display:none; }
+
+.sec-eyebrow {
+  font-size:7px; letter-spacing:0.55em; color:var(--gold);
+  margin-bottom:14px;
+}
+.sec-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(32px,5vw,52px); font-weight:300;
+  color:var(--white); line-height:0.95; margin-bottom:8px;
+}
+.sec-title em { font-style:italic; color:var(--gold); }
+.sec-rule {
+  height:1px; background:linear-gradient(90deg,var(--gold),transparent);
+  margin:20px 0 28px;
+}
+.sec-desc {
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px; font-weight:300; color:var(--white-dim);
+  line-height:1.75; margin-bottom:32px;
+  border-left:2px solid var(--gold-dim);
+  padding-left:18px; font-style:italic;
+}
+
+/* ── INFO BLOCKS (read-only sections) ── */
+.info-block { margin-bottom:24px; }
+.info-block p {
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px; font-weight:300; color:var(--white-dim);
+  line-height:1.8; margin-bottom:14px;
+}
+.info-block ul { list-style:none; margin:14px 0 14px 0; }
+.info-block ul li {
+  font-family:'Cormorant Garamond', serif;
+  font-size:15px; color:var(--white-dim); line-height:1.7;
+  padding:6px 0 6px 24px; position:relative;
+}
+.info-block ul li::before {
+  content:'✦'; position:absolute; left:0;
+  color:var(--gold); font-size:10px;
+}
+.info-callout {
+  border-left:3px solid var(--gold);
+  padding:18px 22px;
+  background:var(--gold-ghost);
+  margin:20px 0;
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px; font-style:italic; color:var(--white);
+  line-height:1.75;
+}
+.info-quote {
+  text-align:center; padding:28px;
+  border:1px solid var(--gold-dim);
+  background:var(--gold-ghost);
+  margin:24px 0;
+}
+.info-quote .quote-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:20px; font-style:italic; color:var(--white);
+  line-height:1.6;
+}
+.principle-list { margin:20px 0; }
+.principle-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:10px 0; border-bottom:1px solid rgba(207,157,123,0.08);
+}
+.principle-item:last-child { border-bottom:none; }
+.principle-star { color:var(--gold); font-size:12px; margin-top:2px; flex-shrink:0; }
+.principle-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px; font-weight:500; color:var(--white);
+}
+
+/* Progression */
+.progression {
+  border:1px solid var(--gold-dim); margin:24px 0;
+}
+.prog-item {
+  padding:16px 24px; text-align:center;
+  border-bottom:1px solid var(--gold-dim);
+  position:relative;
+}
+.prog-item:last-child { border-bottom:none; }
+.prog-item:first-child { background:var(--surf); }
+.prog-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:15px; color:var(--white);
+}
+.prog-item:first-child .prog-title { color:var(--gold); font-weight:500; }
+.prog-arrow { color:var(--gold); font-size:18px; margin-top:8px; display:block; }
+
+/* ── QUESTIONS ── */
+.question-block { margin-bottom:36px; }
+.q-label {
+  display:flex; align-items:flex-start; gap:10px;
+  margin-bottom:12px;
+}
+.q-num {
+  font-size:9px; letter-spacing:0.2em; color:var(--gold);
+  font-weight:600; padding-top:2px; flex-shrink:0; min-width:28px;
+}
+.q-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:17px; font-weight:400; color:var(--white);
+  line-height:1.5;
+}
+.q-note {
+  font-size:12px; color:var(--silver); font-style:italic;
+  margin-top:6px; margin-left:38px; font-family:'Cormorant Garamond',serif;
+}
+.q-required {
+  font-size:7px; letter-spacing:0.3em; color:var(--gold);
+  margin-left:38px; margin-bottom:10px;
+}
+
+/* Inputs */
+input[type=text], input[type=email], input[type=tel],
+input[type=date], input[type=password], textarea, select {
+  width:100%;
+  background:rgba(22,33,39,0.8);
+  border:1px solid rgba(207,157,123,0.2);
+  border-radius:2px;
+  color:var(--white);
+  font-family:'Josefin Sans', sans-serif;
+  font-size:11px; font-weight:300; letter-spacing:0.1em;
+  padding:14px 18px; outline:none;
+  transition:border-color 0.3s, background 0.3s;
+  -webkit-appearance:none; appearance:none;
+}
+input::placeholder, textarea::placeholder { color:rgba(139,144,142,0.4); }
+input:focus, textarea:focus, select:focus {
+  border-color:rgba(207,157,123,0.5);
+  background:rgba(22,33,39,0.95);
+}
+textarea { resize:vertical; min-height:120px; line-height:1.6; }
+select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23CF9D7B' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+select option { background:var(--deep); color:var(--white); }
+
+/* Radio / Checkbox custom */
+.options-list { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+.option-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 16px;
+  border:1px solid rgba(207,157,123,0.12);
+  cursor:pointer; transition:all 0.2s;
+  background:rgba(22,33,39,0.4);
+}
+.option-item:hover { border-color:rgba(207,157,123,0.35); background:var(--gold-ghost); }
+.option-item input[type=radio],
+.option-item input[type=checkbox] {
+  width:16px; height:16px; flex-shrink:0; margin-top:2px;
+  accent-color:var(--gold); cursor:pointer;
+  padding:0; border:none; background:none;
+}
+.option-label {
+  font-family:'Cormorant Garamond', serif;
+  font-size:15px; color:var(--white-dim); cursor:pointer; line-height:1.5;
+}
+
+/* Scale */
+.scale-wrap { display:flex; align-items:center; gap:12px; margin-top:8px; }
+.scale-label { font-size:10px; letter-spacing:0.15em; color:var(--silver); white-space:nowrap; }
+.scale-numbers { display:flex; gap:6px; flex:1; justify-content:space-between; }
+.scale-btn {
+  width:36px; height:36px; border:1px solid rgba(207,157,123,0.2);
+  background:rgba(22,33,39,0.4); color:var(--silver);
+  font-family:'Josefin Sans',sans-serif; font-size:11px;
+  cursor:pointer; transition:all 0.2s; display:flex;
+  align-items:center; justify-content:center;
+  border-radius:2px;
+}
+.scale-btn:hover { border-color:var(--gold); color:var(--gold); }
+.scale-btn.selected { border-color:var(--gold); background:var(--gold); color:var(--deep); font-weight:600; }
+
+/* Confirmation checkboxes */
+.confirm-list { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+.confirm-item {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:14px 18px;
+  border:1px solid rgba(207,157,123,0.15);
+  background:rgba(22,33,39,0.4);
+}
+.confirm-item input[type=checkbox] {
+  width:16px; height:16px; flex-shrink:0; margin-top:2px;
+  accent-color:var(--gold); cursor:pointer;
+  padding:0; border:none; background:none;
+}
+.confirm-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:15px; color:var(--white-dim); line-height:1.6;
+}
+
+/* ── NAVIGATION ── */
+.form-nav {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:52px; padding-top:32px;
+  border-top:1px solid rgba(207,157,123,0.1);
+}
+.nav-info { font-size:8px; letter-spacing:0.3em; color:var(--silver); }
+.nav-info span { color:var(--gold); }
+.nav-btns { display:flex; gap:12px; }
+.nav-btn {
+  background:transparent; border:1px solid rgba(207,157,123,0.3);
+  color:var(--silver); font-family:'Josefin Sans',sans-serif;
+  font-size:9px; font-weight:300; letter-spacing:0.4em;
+  padding:14px 32px; cursor:pointer; transition:all 0.3s;
+}
+.nav-btn:hover { border-color:var(--gold); color:var(--gold); }
+.nav-btn.primary {
+  border-color:var(--gold); color:var(--gold);
+  position:relative; overflow:hidden;
+}
+.nav-btn.primary::before {
+  content:''; position:absolute; inset:0;
+  background:var(--gold); transform:translateX(-101%);
+  transition:transform 0.3s ease;
+}
+.nav-btn.primary:hover::before { transform:translateX(0); }
+.nav-btn.primary:hover { color:var(--deep); }
+.nav-btn span { position:relative; z-index:1; }
+
+/* ── ERROR STATES ── */
+.field-error {
+  font-size:10px; letter-spacing:0.2em; color:var(--error);
+  margin-top:8px; display:none;
+}
+.field-error.show { display:block; }
+input.invalid, textarea.invalid, select.invalid {
+  border-color:rgba(139,32,32,0.5) !important;
+}
+
+/* ── SUCCESS SCREEN ── */
+.success-screen {
+  display:none; position:relative; z-index:1;
+  min-height:100vh; padding:120px 48px 80px;
+  flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+}
+.success-screen.active { display:flex; }
+.success-icon { font-size:40px; color:var(--gold); margin-bottom:32px; }
+.success-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(36px,5vw,64px); font-weight:300;
+  color:var(--white); line-height:0.95; margin-bottom:16px;
+}
+.success-title em { font-style:italic; color:var(--gold); }
+.success-body {
+  font-family:'Cormorant Garamond', serif;
+  font-size:18px; font-weight:300; color:var(--white-dim);
+  max-width:540px; line-height:1.8; margin:0 auto;
+}
+.success-rule { width:60px; height:1px; background:var(--gold); margin:32px auto; }
+
+/* ── CORNER MARKS ── */
+.c-tl,.c-br { position:fixed; width:44px; height:44px; pointer-events:none; z-index:50; opacity:0.2; }
+.c-tl { top:72px; left:12px; border-top:1px solid var(--gold); border-left:1px solid var(--gold); }
+.c-br { bottom:12px; right:12px; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation:fadeUp 0.5s ease both; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .site-header{padding:16px 20px;}
+  .hero{padding:100px 24px 60px;}
+  .hero-meta{gap:24px;}
+  .scale-numbers{gap:3px;}
+  .scale-btn{width:28px;height:28px;font-size:10px;}
+  .nav-btn{padding:12px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PASSWORD GATE ══ -->
+<!-- To change the password: edit the GATE_PASSWORD value below. -->
+<div class="gate-screen" id="gate-screen">
+  <svg class="gate-logo" viewBox="0 0 40 40" fill="none">
+    <path d="M20 2L21.2 7.5L26.5 6.2L22.5 9.5L24.8 14.5L20 11.2L15.2 14.5L17.5 9.5L13.5 6.2L18.8 7.5Z" fill="#CF9D7B" opacity="0.85"/>
+    <path d="M5 31L5 15L20 27L35 15L35 31" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+    <path d="M10 23L20 33L30 23" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+  </svg>
+  <p class="gate-eyebrow">MIND LEGACIES · RECRUITMENT GATEWAY</p>
+  <h1 class="gate-title">Private <em>Access</em></h1>
+  <p class="gate-desc">This application is by invitation only. Please enter the access code provided to you.</p>
+  <div class="gate-form">
+    <input type="password" class="gate-input" id="gate-input" placeholder="ACCESS CODE" autocomplete="off">
+    <button type="button" class="gate-btn" onclick="checkGatePassword()"><span>ENTER →</span></button>
+    <p class="gate-error" id="gate-error">Incorrect access code. Please try again.</p>
+  </div>
+</div>
+
+<div class="c-tl"></div>
+<div class="c-br"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+      <path d="M20 2L21.2 7.5L26.5 6.2L22.5 9.5L24.8 14.5L20 11.2L15.2 14.5L17.5 9.5L13.5 6.2L18.8 7.5Z" fill="#CF9D7B" opacity="0.85"/>
+      <path d="M5 31L5 15L20 27L35 15L35 31" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+      <path d="M10 23L20 33L30 23" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+    </svg>
+    <div class="logo-text">
+      <span class="name">MIND LEGACIES</span>
+      <span class="tag">INTELLIGENCE · INNOVATION · LEGACY</span>
+    </div>
+  </div>
+  <div class="header-right">RECRUITMENT GATEWAY<br><span>FOUNDING ARCHITECTURE ASSOCIATE</span></div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap"><div class="progress-fill" id="progress"></div></div>
+
+<!-- HERO -->
+<div class="hero" id="hero-screen">
+  <p class="hero-eyebrow">MIND LEGACIES · RECRUITMENT GATEWAY · HEAD ML</p>
+  <h1 class="hero-title">Founding<br><em>Architecture</em><br>Associate</h1>
+  <p class="hero-sub">HEAD MIND LEGACIES · INSTITUTIONAL FOUNDATION STAGE</p>
+  <div class="hero-vline"></div>
+  <p class="hero-desc">This is not an ordinary application. You are applying to help build an institution from its foundation. Read each section carefully before proceeding.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="val">14</span><span class="lbl">SECTIONS</span></div>
+    <div class="hero-meta-item"><span class="val">15–20</span><span class="lbl">MINUTES</span></div>
+    <div class="hero-meta-item"><span class="val">100%</span><span class="lbl">REVIEWED</span></div>
+  </div>
+  <a class="start-btn" onclick="startForm()"><span>BEGIN APPLICATION</span></a>
+</div>
+
+<!-- FORM -->
+<div class="form-outer" id="form-screen">
+<div class="form-inner">
+<form id="main-form" action="https://formspree.io/f/xykrepln" method="POST">
+
+<!-- Hidden fields -->
+<input type="hidden" name="_subject" value="Mind Legacies — New Recruitment Application: Founding Architecture Associate">
+<input type="hidden" name="_replyto" id="reply-to-field">
+
+<!-- ══ SECTION 1 ══ -->
+<div class="section-wrap" id="sec-1">
+  <p class="sec-eyebrow">SECTION 01 OF 13</p>
+  <h2 class="sec-title">Welcome to<br><em>Mind Legacies</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Read carefully before proceeding. This section introduces the organization you are applying to join.</p>
+  <div class="info-block">
+    <p>Mind Legacies is a Central Intelligence Holding Company and Parent Organization established to build, govern, commercialize, and scale breakthrough organizations through the disciplined application of human intelligence.</p>
+    <p>You are applying directly to <strong style="color:var(--white)">Head Mind Legacies</strong> — not to a subsidiary. Head Mind Legacies is responsible for:</p>
+    <ul>
+      <li>Governance</li><li>Executive Leadership</li><li>Organizational Architecture</li>
+      <li>Operational Readiness</li><li>Institutional Development</li><li>Strategic Direction</li>
+    </ul>
+    <p>The successful applicant will become part of the founding team responsible for helping build the institution itself. This is not a support role within an existing structure. This is a role in which you help create the structure.</p>
+  </div>
+</div>
+
+<!-- ══ SECTION 2 ══ -->
+<div class="section-wrap hidden" id="sec-2">
+  <p class="sec-eyebrow">SECTION 02 OF 13</p>
+  <h2 class="sec-title">About This<br><em>Opportunity</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Please read this section in full. It describes the nature of the role and its relationship to the broader Mind Legacies ecosystem.</p>
+  <div class="info-block">
+    <p>This is a <strong style="color:var(--white)">Founding Volunteer Position</strong> within Head Mind Legacies. You are joining the organization during its Institutional Foundation Stage — a deliberately structured phase focused on:</p>
+    <ul>
+      <li>Building governance systems and documentation</li>
+      <li>Developing operational infrastructure</li>
+      <li>Establishing leadership capability</li>
+      <li>Creating organizational standards</li>
+      <li>Laying the foundation for long-term scalability before commercial expansion</li>
+    </ul>
+    <p>This role reports directly within Head Mind Legacies. It is not a position within SYNAPSIS or any other subsidiary.</p>
+    <div class="info-callout">Because Head Mind Legacies governs all subsidiaries, the successful candidate may occasionally be assigned to support specific subsidiary projects for defined periods where their expertise is required. These assignments remain under Head Mind Legacies governance and are temporary, project-based responsibilities. They do not change the nature of your primary office.</div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3 ══ -->
+<div class="section-wrap hidden" id="sec-3">
+  <p class="sec-eyebrow">SECTION 03 OF 13</p>
+  <h2 class="sec-title">Volunteer Structure<br>& <em>Stipend Transparency</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Mind Legacies believes that transparency is non-negotiable. Please read this section carefully.</p>
+  <div class="info-block">
+    <p>Mind Legacies currently operates using a structured founding volunteer model. This means that participation during the institutional foundation stage is volunteer-based.</p>
+    <div class="info-callout">The first month of participation is an evaluation period during which no volunteer stipend is provided. This period allows both Mind Legacies and the volunteer to determine whether there is long-term alignment in values, capability, and commitment.</div>
+    <p>Following successful completion of the evaluation period, volunteers who continue with the organization transition into the structured volunteer stipend model according to organizational financial planning and stage-based growth.</p>
+    <p>Mind Legacies communicates these expectations before recruitment continues because we respect your time and believe informed decisions lead to better outcomes for everyone.</p>
+  </div>
+</div>
+
+<!-- ══ SECTION 4 ══ -->
+<div class="section-wrap hidden" id="sec-4">
+  <p class="sec-eyebrow">SECTION 04 OF 13</p>
+  <h2 class="sec-title">Growth Within<br><em>Mind Legacies</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Understanding how progression works within this institution.</p>
+  <div class="info-block">
+    <p>Mind Legacies does not promise promotions. Individuals earn greater responsibility through demonstrated excellence, stewardship, leadership, and consistent contribution to the institution's standards.</p>
+    <div class="progression">
+      <div class="prog-item"><div class="prog-title">Founding Organizational Architecture Associate</div><span class="prog-arrow">↓</span></div>
+      <div class="prog-item"><div class="prog-title">Organizational Architecture Specialist</div><span class="prog-arrow">↓</span></div>
+      <div class="prog-item"><div class="prog-title">Senior Organizational Architect</div><span class="prog-arrow">↓</span></div>
+      <div class="prog-item"><div class="prog-title">Organizational Architecture Manager</div><span class="prog-arrow">↓</span></div>
+      <div class="prog-item"><div class="prog-title">Executive Director of Organizational Architecture</div></div>
+    </div>
+    <div class="info-quote"><p class="quote-text">"Only work that meets the standards of Mind Legacies deserves its name."</p></div>
+    <p>Progression is never automatic. Every office is earned.</p>
+  </div>
+</div>
+
+<!-- ══ SECTION 5 ══ -->
+<div class="section-wrap hidden" id="sec-5">
+  <p class="sec-eyebrow">SECTION 05 OF 13</p>
+  <h2 class="sec-title">Confidentiality &<br><em>Information Governance</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">How Mind Legacies protects organizational knowledge — and why it matters.</p>
+  <div class="info-block">
+    <p>Mind Legacies intentionally protects organizational knowledge. Workers receive access only to the information required for their responsibilities.</p>
+    <ul>
+      <li>Different offices possess different authorization levels.</li>
+      <li>Subsidiary information, executive documentation, governance systems, and strategic projects are protected through controlled access.</li>
+      <li>Temporary access is granted only when officially assigned to specific projects.</li>
+      <li>Every successful candidate will sign confidentiality agreements and NDAs before receiving access to organizational resources.</li>
+    </ul>
+    <p>This approach protects both the institution and its people. It is a standard of institutional governance, not a restriction.</p>
+  </div>
+</div>
+
+<!-- ══ SECTION 6 ══ -->
+<div class="section-wrap hidden" id="sec-6">
+  <p class="sec-eyebrow">SECTION 06 OF 13</p>
+  <h2 class="sec-title">Mind Legacies<br><em>Culture</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These are the principles that guide every decision made throughout this organization. They are not aspirational values. They are operational standards.</p>
+  <div class="info-block">
+    <div class="principle-list">
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Structure before speed.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Excellence over convenience.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Disciplined execution.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Respect without exception.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Stewardship before status.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Continuous improvement.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Simplicity over unnecessary complexity.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Discernment before action.</span></div>
+      <div class="principle-item"><span class="principle-star">✦</span><span class="principle-text">Stability before expansion.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 7 — CONFIRMATIONS ══ -->
+<div class="section-wrap hidden" id="sec-7">
+  <p class="sec-eyebrow">SECTION 07 OF 13</p>
+  <h2 class="sec-title">Candidate<br><em>Confirmation</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">You must confirm your understanding of all items below before proceeding. All checkboxes are required.</p>
+  <div class="confirm-list">
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_volunteer" value="Confirmed" required>
+      <span class="confirm-text">I understand that this is a founding volunteer position.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_evaluation" value="Confirmed" required>
+      <span class="confirm-text">I understand that the first month is an evaluation period during which no volunteer stipend is provided.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_stipend" value="Confirmed" required>
+      <span class="confirm-text">I understand that future stipends follow successful completion of the evaluation period and are subject to organizational financial planning.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_headml" value="Confirmed" required>
+      <span class="confirm-text">I understand that this role belongs to Head Mind Legacies — not to a subsidiary.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_assignment" value="Confirmed" required>
+      <span class="confirm-text">I understand that I may occasionally be assigned to support subsidiary projects under official Head Mind Legacies assignment.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_nda" value="Confirmed" required>
+      <span class="confirm-text">I understand that Mind Legacies operates under strict confidentiality standards and that I will be required to sign an NDA before accessing organizational resources.</span>
+    </label>
+    <label class="confirm-item">
+      <input type="checkbox" name="confirm_progression" value="Confirmed" required>
+      <span class="confirm-text">I understand that progression within Mind Legacies is earned through demonstrated performance and is never automatic or guaranteed.</span>
+    </label>
+  </div>
+</div>
+
+<!-- ══ SECTION 8 — CANDIDATE INFO ══ -->
+<div class="section-wrap hidden" id="sec-8">
+  <p class="sec-eyebrow">SECTION 08 OF 13</p>
+  <h2 class="sec-title">Candidate<br><em>Information</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Please complete all fields accurately. This information is used for internal records only.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.1</span><span class="q-text">Full Name</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="text" name="full_name" id="full_name" placeholder="Your full name" required>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.2</span><span class="q-text">Email Address</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="email" name="email" id="email_field" placeholder="your@email.com" required oninput="document.getElementById('reply-to-field').value=this.value">
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.3</span><span class="q-text">Phone Number</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="tel" name="phone" placeholder="+27 XX XXX XXXX" required>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.4</span><span class="q-text">City</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="text" name="city" placeholder="Your city" required>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.5</span><span class="q-text">Province</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="province" required>
+      <option value="">Select province</option>
+      <option>Gauteng</option><option>Western Cape</option><option>KwaZulu-Natal</option>
+      <option>Eastern Cape</option><option>Free State</option><option>Limpopo</option>
+      <option>Mpumalanga</option><option>North West</option><option>Northern Cape</option><option>Other</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.6</span><span class="q-text">LinkedIn Profile URL</span></div>
+    <div class="q-note">Optional but recommended.</div>
+    <input type="text" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.7</span><span class="q-text">Highest Qualification</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="qualification" required>
+      <option value="">Select qualification</option>
+      <option>Matric</option><option>Certificate</option><option>Diploma</option>
+      <option>Bachelor's Degree</option><option>Honours</option><option>Master's Degree</option>
+      <option>Doctorate</option><option>Other</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.8</span><span class="q-text">Field of Study</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="text" name="field_of_study" placeholder="e.g. Business Administration, Industrial Engineering" required>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.9</span><span class="q-text">Current Employment Status</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <div class="options-list">
+      <label class="option-item"><input type="radio" name="employment_status" value="Employed Full-Time" required><span class="option-label">Employed Full-Time</span></label>
+      <label class="option-item"><input type="radio" name="employment_status" value="Employed Part-Time"><span class="option-label">Employed Part-Time</span></label>
+      <label class="option-item"><input type="radio" name="employment_status" value="Freelance or Self-Employed"><span class="option-label">Freelance or Self-Employed</span></label>
+      <label class="option-item"><input type="radio" name="employment_status" value="Student"><span class="option-label">Student</span></label>
+      <label class="option-item"><input type="radio" name="employment_status" value="Unemployed"><span class="option-label">Unemployed</span></label>
+      <label class="option-item"><input type="radio" name="employment_status" value="Other"><span class="option-label">Other</span></label>
+    </div>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">8.10</span><span class="q-text">Earliest Available Start Date</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="text" name="start_date" placeholder="DD/MM/YYYY" required>
+  </div>
+</div>
+
+<!-- ══ SECTION 9 — MOTIVATION ══ -->
+<div class="section-wrap hidden" id="sec-9">
+  <p class="sec-eyebrow">SECTION 09 OF 13</p>
+  <h2 class="sec-title"><em>Motivation</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">We want to understand why you are here. Please answer thoughtfully and in your own voice. There are no template answers.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">9.1</span><span class="q-text">Why would you like to join Mind Legacies during its founding stage — specifically at this early institutional moment?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="motivation_founding" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">9.2</span><span class="q-text">What attracted you to Organizational Architecture as a discipline?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="motivation_architecture" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">9.3</span><span class="q-text">What motivates you more — building an existing system, or helping create one from the beginning? Why?</span></div>
+    <div class="q-note">There is no correct answer. We are interested in your genuine preference and reasoning.</div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="motivation_build_vs_create" placeholder="Your response..." required></textarea>
+  </div>
+</div>
+
+<!-- ══ SECTION 10 — SYSTEMS THINKING ══ -->
+<div class="section-wrap hidden" id="sec-10">
+  <p class="sec-eyebrow">SECTION 10 OF 13</p>
+  <h2 class="sec-title">Systems Thinking<br><em>Assessment</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These questions assess how you approach real-world organizational and operational challenges. Take your time. Depth matters more than brevity.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">10.1</span><span class="q-text">You notice that three departments are documenting the same information in three completely different formats. No one has flagged this as a problem. Describe your first steps.</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="systems_q1" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">10.2</span><span class="q-text">Describe a process or workflow you have personally improved. What was the problem, what did you do, and what changed?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="systems_q2" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">10.3</span><span class="q-text">How do you determine whether a process should be improved rather than replaced entirely?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="systems_q3" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">10.4</span><span class="q-text">You have been asked to build a completely new reporting system for a growing organization. No existing template exists. Where do you begin?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="systems_q4" placeholder="Your response..." required></textarea>
+  </div>
+</div>
+
+<!-- ══ SECTION 11 — WORKING STYLE ══ -->
+<div class="section-wrap hidden" id="sec-11">
+  <p class="sec-eyebrow">SECTION 11 OF 13</p>
+  <h2 class="sec-title">Working<br><em>Style</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These questions help us understand how you naturally operate. Answer honestly — we are looking for self-awareness, not perfection.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">11.1</span><span class="q-text">When approaching a new work environment, I prefer to:</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <div class="options-list">
+      <label class="option-item"><input type="radio" name="work_style_1" value="Create systems from the beginning" required><span class="option-label">Create systems from the beginning</span></label>
+      <label class="option-item"><input type="radio" name="work_style_1" value="Improve existing systems I find"><span class="option-label">Improve existing systems I find</span></label>
+      <label class="option-item"><input type="radio" name="work_style_1" value="Follow the systems already in place"><span class="option-label">Follow the systems already in place</span></label>
+      <label class="option-item"><input type="radio" name="work_style_1" value="Evaluate first, then decide"><span class="option-label">Evaluate first, then decide</span></label>
+    </div>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">11.2</span><span class="q-text">When given a complex, multi-step task with no template, I typically:</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <div class="options-list">
+      <label class="option-item"><input type="radio" name="work_style_2" value="Break it into components immediately and begin" required><span class="option-label">Break it into components immediately and begin</span></label>
+      <label class="option-item"><input type="radio" name="work_style_2" value="Research extensively before starting"><span class="option-label">Research extensively before starting</span></label>
+      <label class="option-item"><input type="radio" name="work_style_2" value="Consult with others to define the approach"><span class="option-label">Consult with others to define the approach</span></label>
+      <label class="option-item"><input type="radio" name="work_style_2" value="Draft an outline and refine as I go"><span class="option-label">Draft an outline and refine as I go</span></label>
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-top:40px;">
+    <p style="font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--white);margin-bottom:8px;font-weight:500;">Rate yourself honestly on the following.</p>
+    <p style="font-size:11px;letter-spacing:0.15em;color:var(--silver);margin-bottom:28px;">1 = DEVELOPING  ·  10 = EXCEPTIONAL</p>
+
+    <div id="scale-container"></div>
+  </div>
+</div>
+
+<!-- ══ SECTION 12 — ALIGNMENT ══ -->
+<div class="section-wrap hidden" id="sec-12">
+  <p class="sec-eyebrow">SECTION 12 OF 13</p>
+  <h2 class="sec-title">Mind Legacies<br><em>Alignment</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These questions assess your values, character, and professional maturity. Answer from experience.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">12.1</span><span class="q-text">What does organizational excellence mean to you — in practical terms?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="alignment_q1" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">12.2</span><span class="q-text">Describe a time when you were required to learn something completely unfamiliar. How did you approach it, and what was the outcome?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="alignment_q2" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">12.3</span><span class="q-text">You have submitted a piece of work you are proud of. Your supervisor returns it with extensive feedback requiring significant revision. How do you respond — and what do you do next?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="alignment_q3" placeholder="Your response..." required></textarea>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">12.4</span><span class="q-text">You strongly disagree with a decision made by your supervisor. What do you do?</span></div>
+    <div class="q-note">We are not looking for agreement. We are looking for how you navigate professional disagreement with integrity.</div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="alignment_q4" placeholder="Your response..." required></textarea>
+  </div>
+</div>
+
+<!-- ══ SECTION 13 — FINAL REFLECTION ══ -->
+<div class="section-wrap hidden" id="sec-13">
+  <p class="sec-eyebrow">SECTION 13 OF 13</p>
+  <h2 class="sec-title">Final<br><em>Reflection</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">One final question. This is your opportunity to speak directly to who you intend to become within this institution.</p>
+
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">13.1</span><span class="q-text">If selected, what do you hope your contribution to Mind Legacies will be over the next three years? Be specific.</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <textarea name="final_reflection" placeholder="Your response..." required style="min-height:160px;"></textarea>
+  </div>
+
+  <div style="margin-top:40px;padding:28px;border:1px solid var(--gold-dim);background:var(--gold-ghost);">
+    <p style="font-size:8px;letter-spacing:0.4em;color:var(--gold);margin-bottom:12px;">BEFORE YOU SUBMIT</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--white-dim);line-height:1.7;">Please review your responses before submitting. Every application received by Mind Legacies is reviewed carefully. Once submitted, your application will be processed and you will receive an acknowledgement by email.</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="form-nav">
+  <div class="nav-info">SECTION <span id="current-sec-display">1</span> OF <span>13</span></div>
+  <div class="nav-btns">
+    <button type="button" class="nav-btn" id="btn-back" onclick="goBack()" style="display:none;">← BACK</button>
+    <button type="button" class="nav-btn primary" id="btn-next" onclick="goNext()"><span>CONTINUE →</span></button>
+    <button type="submit" class="nav-btn primary" id="btn-submit" style="display:none;"><span>SUBMIT APPLICATION →</span></button>
+  </div>
+</div>
+
+</form>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✦</div>
+  <h2 class="success-title">Application<br><em>Received</em></h2>
+  <div class="success-rule"></div>
+  <p class="success-body">Thank you for your application. Every application received by Mind Legacies is reviewed carefully against the needs of the organization during its current stage of institutional development.</p>
+  <div class="success-rule"></div>
+  <p class="success-body">Shortlisted candidates will be contacted directly regarding the next stage of the recruitment process. We appreciate your interest in contributing to an institution committed to governance, organizational excellence, and the long-term scaling of human intelligence.</p>
+  <div class="success-rule"></div>
+  <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--gold);margin-top:8px;">We wish you every success throughout the recruitment process.</p>
+</div>
+
+<script>
+// ══ ACCESS CODE ══
+// Change this value to whatever code you want to give candidates.
+const GATE_PASSWORD = "ArchitectML26";
+
+function checkGatePassword() {
+  const input = document.getElementById('gate-input');
+  const error = document.getElementById('gate-error');
+  if (input.value.trim().toLowerCase() === GATE_PASSWORD.toLowerCase()) {
+    document.getElementById('gate-screen').classList.add('hidden');
+    error.classList.remove('show');
+  } else {
+    error.classList.add('show');
+    input.value = '';
+    input.focus();
+  }
+}
+document.getElementById('gate-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkGatePassword();
+});
+
+// ── SCALE QUESTIONS ──
+const scaleQuestions = [
+  { num:'11.3', label:'Attention to Detail',          name:'scale_attention' },
+  { num:'11.4', label:'Organization and Structure',   name:'scale_organization' },
+  { num:'11.5', label:'Documentation Quality',        name:'scale_documentation' },
+  { num:'11.6', label:'Independent Research',         name:'scale_research' },
+  { num:'11.7', label:'Written Communication',        name:'scale_communication' },
+  { num:'11.8', label:'Adaptability Under Change',    name:'scale_adaptability' },
+  { num:'11.9', label:'Learning Speed',               name:'scale_learning' },
+  { num:'11.10','label':'Systems Thinking',           name:'scale_systems' },
+  { num:'11.11','label':'Leadership Initiative',      name:'scale_leadership' },
+];
+
+const scaleContainer = document.getElementById('scale-container');
+const scaleValues = {};
+
+scaleQuestions.forEach(q => {
+  scaleValues[q.name] = 0;
+  const block = document.createElement('div');
+  block.className = 'question-block';
+  block.innerHTML = `
+    <div class="q-label"><span class="q-num">${q.num}</span><span class="q-text">${q.label}</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <input type="hidden" name="${q.name}" id="${q.name}" required>
+    <div class="scale-wrap">
+      <span class="scale-label">1 — LOW</span>
+      <div class="scale-numbers" id="scale-${q.name}">
+        ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="scale-btn" data-scale="${q.name}" data-val="${n}" onclick="selectScale('${q.name}',${n},this)">${n}</button>`).join('')}
+      </div>
+      <span class="scale-label">10 — HIGH</span>
+    </div>`;
+  scaleContainer.appendChild(block);
+});
+
+function selectScale(name, val, btn) {
+  scaleValues[name] = val;
+  document.getElementById(name).value = val;
+  const btns = document.querySelectorAll(`[data-scale="${name}"]`);
+  btns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── SECTION LOGIC ──
+let currentSec = 1;
+const totalSecs = 13;
+
+function startForm() {
+  document.getElementById('hero-screen').style.display = 'none';
+  document.getElementById('form-screen').classList.add('active');
+  showSection(1);
+  updateProgress();
+}
+
+function showSection(n) {
+  for(let i=1; i<=totalSecs; i++) {
+    const el = document.getElementById(`sec-${i}`);
+    if(el) el.classList.add('hidden');
+  }
+  const target = document.getElementById(`sec-${n}`);
+  if(target) {
+    target.classList.remove('hidden');
+    target.classList.add('fade-in');
+  }
+  document.getElementById('current-sec-display').textContent = n;
+  document.getElementById('btn-back').style.display = n > 1 ? 'block' : 'none';
+  document.getElementById('btn-next').style.display = n < totalSecs ? 'block' : 'none';
+  document.getElementById('btn-submit').style.display = n === totalSecs ? 'block' : 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateProgress() {
+  const pct = ((currentSec - 1) / totalSecs) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function validateSection(n) {
+  const sec = document.getElementById(`sec-${n}`);
+  if(!sec) return true;
+  const required = sec.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(el => {
+    if(el.type === 'checkbox') {
+      if(!el.checked) { el.parentElement.style.borderColor='rgba(139,32,32,0.5)'; valid=false; }
+      else { el.parentElement.style.borderColor=''; }
+    } else if(el.type === 'radio') {
+      const name = el.name;
+      const checked = sec.querySelector(`[name="${name}"]:checked`);
+      if(!checked) { valid=false; }
+    } else {
+      if(!el.value.trim()) { el.classList.add('invalid'); valid=false; }
+      else { el.classList.remove('invalid'); }
+    }
+  });
+  if(!valid) {
+    const firstInvalid = sec.querySelector('[required]:invalid, .invalid, input[type=checkbox]');
+    if(firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  return valid;
+}
+
+function goNext() {
+  if(!validateSection(currentSec)) return;
+  if(currentSec < totalSecs) {
+    currentSec++;
+    showSection(currentSec);
+    updateProgress();
+  }
+}
+
+function goBack() {
+  if(currentSec > 1) {
+    currentSec--;
+    showSection(currentSec);
+    updateProgress();
+  }
+}
+
+// ── FORM SUBMIT ──
+document.getElementById('main-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if(!validateSection(currentSec)) return;
+
+  const btn = document.getElementById('btn-submit');
+  btn.innerHTML = '<span>SUBMITTING...</span>';
+  btn.disabled = true;
+
+  // Validate all scale fields
+  let scaleValid = true;
+  scaleQuestions.forEach(q => {
+    if(!scaleValues[q.name]) scaleValid = false;
+  });
+  if(!scaleValid) {
+    alert('Please complete all scale ratings in Section 11 before submitting.');
+    btn.innerHTML = '<span>SUBMIT APPLICATION →</span>';
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    const formData = new FormData(this);
+    const response = await fetch('https://formspree.io/f/xykrepln', {
+      method:'POST',
+      body: formData,
+      headers:{ 'Accept':'application/json' }
+    });
+    if(response.ok) {
+      document.getElementById('form-screen').classList.remove('active');
+      const s = document.getElementById('success-screen');
+      s.classList.add('active');
+      document.getElementById('progress').style.width = '100%';
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      throw new Error('Submission failed');
+    }
+  } catch(err) {
+    btn.innerHTML = '<span>SUBMIT APPLICATION →</span>';
+    btn.disabled = false;
+    alert('There was an error submitting your application. Please try again.');
+  }
+});
+</script>
+</body>
+</html>
