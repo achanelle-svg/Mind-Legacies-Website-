@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Legacies — Executive Leadership Recruitment Gateway</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --deep: #101214;
+  --panel: #17191C;
+  --line: rgba(255,255,255,0.09);
+  --line-strong: rgba(255,255,255,0.18);
+  --steel: #A9B2B8;
+  --steel-dim: rgba(169,178,184,0.35);
+  --steel-ghost: rgba(169,178,184,0.05);
+  --ink: #E9EAEA;
+  --ink-dim: rgba(233,234,234,0.58);
+  --faint: #6B7176;
+  --error: #9A4A42;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background: var(--deep); color: var(--ink); font-family:'Josefin Sans', sans-serif; font-weight:300; min-height:100vh; }
+
+.gate-screen { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--deep); text-align:center; padding:24px; }
+.gate-screen.hidden { display:none; }
+.gate-mark { width:26px; height:26px; border:1px solid var(--steel); transform:rotate(45deg); margin-bottom:34px; }
+.gate-eyebrow { font-size:8px; letter-spacing:0.5em; color:var(--steel); margin-bottom:22px; }
+.gate-title { font-family:'Cormorant Garamond', serif; font-size:clamp(28px,4.5vw,40px); font-weight:300; color:var(--ink); margin-bottom:14px; }
+.gate-desc { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--ink-dim); max-width:420px; line-height:1.7; margin-bottom:36px; }
+.gate-form { display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; max-width:300px; }
+.gate-input { width:100%; background:transparent; border:1px solid var(--line-strong); border-radius:0; color:var(--ink); font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.2em; text-align:center; padding:15px 16px; outline:none; }
+.gate-input:focus { border-color:var(--steel); }
+.gate-btn { width:100%; background:transparent; border:1px solid var(--steel); color:var(--steel); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.35em; padding:15px; cursor:pointer; transition:all 0.3s; }
+.gate-btn:hover { background:var(--steel); color:var(--deep); }
+.gate-error { font-size:10px; letter-spacing:0.15em; color:var(--error); margin-top:2px; display:none; }
+.gate-error.show { display:block; }
+
+.site-header { position:fixed; top:0; left:0; right:0; z-index:100; padding:22px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); background:rgba(16,18,20,0.96); backdrop-filter:blur(10px); }
+.logo-name { font-size:11px; letter-spacing:0.3em; color:var(--ink); }
+.logo-tag { font-size:7px; letter-spacing:0.25em; color:var(--faint); margin-top:3px; }
+.header-right { font-size:7px; letter-spacing:0.3em; color:var(--faint); text-align:right; line-height:1.9; }
+.header-right span { color:var(--steel); }
+
+.progress-wrap { position:fixed; top:68px; left:0; right:0; z-index:99; height:1px; background:var(--line); }
+.progress-fill { height:100%; background:var(--steel); width:0%; transition:width 0.5s ease; }
+
+.hero { min-height:100vh; position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px 48px 80px; }
+.hero-eyebrow { font-size:8px; letter-spacing:0.5em; color:var(--steel); margin-bottom:30px; }
+.hero-title { font-family:'Cormorant Garamond', serif; font-size:clamp(38px,6vw,66px); font-weight:300; line-height:1.05; color:var(--ink); margin-bottom:20px; }
+.hero-rule { width:40px; height:1px; background:var(--steel); margin:0 auto 40px; }
+.hero-desc { font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:300; color:var(--ink-dim); max-width:560px; line-height:1.8; margin:0 auto 20px; }
+.hero-note { font-size:10px; letter-spacing:0.15em; color:var(--faint); max-width:480px; margin:0 auto 52px; line-height:1.9; }
+.start-btn { display:inline-block; background:transparent; border:1px solid var(--steel); color:var(--steel); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.4em; padding:17px 48px; cursor:pointer; transition:all 0.3s; text-decoration:none; }
+.start-btn:hover { background:var(--steel); color:var(--deep); }
+
+.form-outer { display:none; position:relative; z-index:1; min-height:100vh; padding:110px 24px 80px; }
+.form-outer.active { display:block; }
+.form-inner { max-width:740px; margin:0 auto; }
+
+.section-wrap { margin-bottom:56px; }
+.section-wrap.hidden { display:none; }
+.sec-eyebrow { font-size:7px; letter-spacing:0.5em; color:var(--steel); margin-bottom:12px; }
+.sec-title { font-family:'Cormorant Garamond', serif; font-size:clamp(26px,4vw,38px); font-weight:300; color:var(--ink); margin-bottom:20px; }
+.sec-rule { height:1px; background:var(--line-strong); margin-bottom:28px; }
+.sec-desc { font-family:'Cormorant Garamond', serif; font-size:15px; font-weight:300; color:var(--ink-dim); line-height:1.75; margin-bottom:28px; font-style:italic; }
+
+.info-block p { font-family:'Cormorant Garamond', serif; font-size:15px; font-weight:300; color:var(--ink-dim); line-height:1.85; margin-bottom:14px; }
+.info-block ul { list-style:none; margin:14px 0; }
+.info-block ul li { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--ink-dim); line-height:1.75; padding:5px 0 5px 20px; position:relative; }
+.info-block ul li::before { content:'—'; position:absolute; left:0; color:var(--steel); }
+.note-line { border-left:1px solid var(--steel); padding-left:18px; margin:22px 0; font-family:'Cormorant Garamond', serif; font-size:15px; font-style:italic; color:var(--ink); line-height:1.75; }
+
+.question-block { margin-bottom:34px; }
+.q-label { display:flex; align-items:flex-start; gap:10px; margin-bottom:11px; }
+.q-num { font-size:9px; letter-spacing:0.15em; color:var(--steel); font-weight:600; padding-top:2px; flex-shrink:0; min-width:34px; }
+.q-text { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:400; color:var(--ink); line-height:1.5; }
+.q-note { font-size:11px; color:var(--faint); font-style:italic; margin-top:5px; margin-left:44px; font-family:'Cormorant Garamond',serif; }
+.q-required { font-size:7px; letter-spacing:0.25em; color:var(--steel); margin-left:44px; margin-bottom:9px; }
+
+input[type=text], input[type=email], input[type=tel], input[type=password], textarea, select {
+  width:100%; background:rgba(255,255,255,0.02); border:1px solid var(--line-strong); border-radius:0;
+  color:var(--ink); font-family:'Josefin Sans', sans-serif; font-size:11px; font-weight:300; letter-spacing:0.08em;
+  padding:13px 16px; outline:none; transition:border-color 0.3s; -webkit-appearance:none; appearance:none;
+}
+input::placeholder, textarea::placeholder { color:rgba(233,234,234,0.25); }
+input:focus, textarea:focus, select:focus { border-color:var(--steel); }
+textarea { resize:vertical; min-height:110px; line-height:1.6; }
+select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A9B2B8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+select option { background:var(--deep); color:var(--ink); }
+
+.options-list { display:flex; flex-direction:column; gap:9px; margin-top:4px; }
+.option-item { display:flex; align-items:flex-start; gap:12px; padding:11px 15px; border:1px solid var(--line); cursor:pointer; transition:all 0.2s; }
+.option-item:hover { border-color:var(--steel-dim); background:var(--steel-ghost); }
+.option-item input[type=radio], .option-item input[type=checkbox] { width:15px; height:15px; flex-shrink:0; margin-top:2px; accent-color:var(--steel); cursor:pointer; }
+.option-label { font-family:'Cormorant Garamond', serif; font-size:14px; color:var(--ink-dim); cursor:pointer; line-height:1.5; }
+
+.likert-block { margin-bottom:30px; padding-bottom:26px; border-bottom:1px solid var(--line); }
+.likert-block:last-child { border-bottom:none; }
+.likert-statement { font-family:'Cormorant Garamond', serif; font-size:16px; color:var(--ink); margin-bottom:14px; line-height:1.5; }
+.likert-row { display:flex; gap:8px; flex-wrap:wrap; }
+.likert-opt { flex:1; min-width:88px; text-align:center; padding:10px 6px; border:1px solid var(--line-strong); font-size:9px; letter-spacing:0.05em; color:var(--ink-dim); cursor:pointer; transition:all 0.2s; }
+.likert-opt:hover { border-color:var(--steel-dim); }
+.likert-opt.selected { border-color:var(--steel); background:var(--steel); color:var(--deep); font-weight:600; }
+
+.confirm-list { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.confirm-item { display:flex; align-items:flex-start; gap:12px; padding:13px 16px; border:1px solid var(--line-strong); }
+.confirm-item input[type=checkbox] { width:15px; height:15px; flex-shrink:0; margin-top:2px; accent-color:var(--steel); cursor:pointer; }
+.confirm-text { font-family:'Cormorant Garamond', serif; font-size:14px; color:var(--ink-dim); line-height:1.6; }
+
+.form-nav { display:flex; align-items:center; justify-content:space-between; margin-top:48px; padding-top:28px; border-top:1px solid var(--line); }
+.nav-info { font-size:8px; letter-spacing:0.25em; color:var(--faint); }
+.nav-info span { color:var(--steel); }
+.nav-btns { display:flex; gap:12px; }
+.nav-btn { background:transparent; border:1px solid var(--line-strong); color:var(--ink-dim); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.35em; padding:13px 28px; cursor:pointer; transition:all 0.3s; }
+.nav-btn:hover { border-color:var(--steel); color:var(--steel); }
+.nav-btn.primary { border-color:var(--steel); color:var(--steel); }
+.nav-btn.primary:hover { background:var(--steel); color:var(--deep); }
+
+input.invalid, textarea.invalid, select.invalid { border-color:var(--error) !important; }
+
+.success-screen { display:none; position:relative; z-index:1; min-height:100vh; padding:120px 48px 80px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.success-screen.active { display:flex; }
+.success-mark { width:24px; height:24px; border:1px solid var(--steel); transform:rotate(45deg); margin-bottom:32px; }
+.success-title { font-family:'Cormorant Garamond', serif; font-size:clamp(30px,4.5vw,48px); font-weight:300; color:var(--ink); margin-bottom:20px; }
+.success-body { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:300; color:var(--ink-dim); max-width:520px; line-height:1.85; margin:0 auto; }
+.success-rule { width:40px; height:1px; background:var(--steel); margin:28px auto; }
+.stage-list { text-align:left; max-width:360px; margin:24px auto 0; }
+.stage-item { display:flex; align-items:baseline; gap:14px; padding:9px 0; border-bottom:1px solid var(--line); font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--ink-dim); }
+.stage-item span.n { font-size:10px; color:var(--steel); letter-spacing:0.1em; }
+
+@media(max-width:768px){
+  .site-header{padding:16px 20px;}
+  .hero{padding:100px 24px 60px;}
+  .likert-row{gap:6px;}
+  .likert-opt{min-width:70px; font-size:8px;}
+  .nav-btn{padding:11px 18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="gate-screen" id="gate-screen">
+  <div class="gate-mark"></div>
+  <p class="gate-eyebrow">MIND LEGACIES · EXECUTIVE GATEWAY</p>
+  <h1 class="gate-title">By Invitation</h1>
+  <p class="gate-desc">This gateway is invitation-only. Please enter the access code provided to you directly.</p>
+  <div class="gate-form">
+    <input type="password" class="gate-input" id="gate-input" placeholder="ACCESS CODE" autocomplete="off">
+    <button type="button" class="gate-btn" onclick="checkGatePassword()"><span>ENTER</span></button>
+    <p class="gate-error" id="gate-error">Incorrect access code.</p>
+  </div>
+</div>
+
+<header class="site-header">
+  <div>
+    <div class="logo-name">MIND LEGACIES</div>
+    <div class="logo-tag">HEAD MIND LEGACIES</div>
+  </div>
+  <div class="header-right">EXECUTIVE LEADERSHIP GATEWAY<br><span>EXECUTIVE OPERATIONS OFFICE</span></div>
+</header>
+
+<div class="progress-wrap"><div class="progress-fill" id="progress"></div></div>
+
+<div class="hero" id="hero-screen">
+  <p class="hero-eyebrow">HEAD MIND LEGACIES · STAGE 1</p>
+  <h1 class="hero-title">Executive Leadership<br>Recruitment Gateway</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-desc">This gateway evaluates executive alignment, leadership judgement, governance philosophy, operational discipline, and institutional thinking for the Executive Operations Office within Head Mind Legacies, supporting the President during Stage 1 of institutional development.</p>
+  <p class="hero-note">COMPLETION DOES NOT CONSTITUTE AN OFFER. YOU ARE NOT CURRENTLY APPLYING FOR THE CONSTITUTIONAL OFFICE OF COO. THE EXECUTIVE OPERATIONS OFFICE IS EXPECTED TO EVOLVE INTO THAT OFFICE AS MIND LEGACIES MATURES.</p>
+  <a class="start-btn" onclick="startForm()"><span>BEGIN EVALUATION</span></a>
+</div>
+
+<div class="form-outer" id="form-screen">
+<div class="form-inner">
+<form id="main-form" action="https://formspree.io/f/xykrepln" method="POST">
+<input type="hidden" name="_subject" value="Mind Legacies — Executive Operations Office Gateway Submission">
+<input type="hidden" name="_replyto" id="reply-to-field">
+
+<!-- 1 -->
+<div class="section-wrap" id="sec-1">
+  <p class="sec-eyebrow">SECTION 01 OF 13</p>
+  <h2 class="sec-title">Welcome</h2>
+  <div class="sec-rule"></div>
+  <div class="info-block">
+    <p>Welcome to the Executive Leadership Recruitment Gateway.</p>
+    <ul>
+      <li>This gateway is invitation-only, and access is password protected.</li>
+      <li>Completion does not constitute an offer.</li>
+      <li>Mind Legacies evaluates executive alignment, leadership judgement, governance philosophy, operational discipline, and institutional thinking.</li>
+      <li>This office sits within Head Mind Legacies, supporting the President through the Executive Operations Office.</li>
+    </ul>
+    <div class="note-line">You are not currently applying for the constitutional office of COO. The Executive Operations Office is expected to evolve into the future constitutional COO office as Mind Legacies matures.</div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="section-wrap hidden" id="sec-2">
+  <p class="sec-eyebrow">SECTION 02 OF 13</p>
+  <h2 class="sec-title">Candidate Information</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.1</span><span class="q-text">Full Name</span></div><div class="q-required">REQUIRED</div><input type="text" name="full_name" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.2</span><span class="q-text">Email Address</span></div><div class="q-required">REQUIRED</div><input type="email" name="email" required oninput="document.getElementById('reply-to-field').value=this.value"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.3</span><span class="q-text">Phone Number</span></div><div class="q-required">REQUIRED</div><input type="tel" name="phone" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.4</span><span class="q-text">LinkedIn Profile URL</span></div><input type="text" name="linkedin" placeholder="https://linkedin.com/in/yourprofile"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.5</span><span class="q-text">Current or Most Recent Executive Title</span></div><div class="q-required">REQUIRED</div><input type="text" name="current_title" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">2.6</span><span class="q-text">Years of Executive or Senior Leadership Experience</span></div><div class="q-required">REQUIRED</div><input type="text" name="years_experience" required></div>
+</div>
+
+<!-- 3 -->
+<div class="section-wrap hidden" id="sec-3">
+  <p class="sec-eyebrow">SECTION 03 OF 13</p>
+  <h2 class="sec-title">Understanding the Organization</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.1</span><span class="q-text">Why does the idea of building an institution from its earliest stages appeal to you?</span></div><div class="q-required">REQUIRED</div><textarea name="org_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.2</span><span class="q-text">After reading about Mind Legacies, what do you believe distinguishes it from a typical startup?</span></div><div class="q-required">REQUIRED</div><textarea name="org_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.3</span><span class="q-text">In your opinion, what is the purpose of governance inside an organization?</span></div><div class="q-required">REQUIRED</div><textarea name="org_q3" required></textarea></div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">3.4</span><span class="q-text">Which interests you more?</span></div>
+    <div class="q-required">REQUIRED</div>
+    <div class="options-list">
+      <label class="option-item"><input type="radio" name="interest_area" value="Leading people" required><span class="option-label">Leading people</span></label>
+      <label class="option-item"><input type="radio" name="interest_area" value="Building organizations"><span class="option-label">Building organizations</span></label>
+      <label class="option-item"><input type="radio" name="interest_area" value="Building systems that help leaders succeed"><span class="option-label">Building systems that help leaders succeed</span></label>
+    </div>
+    <div class="q-note">Please explain your answer below.</div>
+  </div>
+  <div class="question-block"><textarea name="interest_area_explain" placeholder="Your explanation..." required></textarea></div>
+</div>
+
+<!-- 4 -->
+<div class="section-wrap hidden" id="sec-4">
+  <p class="sec-eyebrow">SECTION 04 OF 13</p>
+  <h2 class="sec-title">Executive Reflection</h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These questions are intentionally deeper.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.1</span><span class="q-text">What responsibilities should never be delegated by a President?</span></div><div class="q-required">REQUIRED</div><textarea name="exec_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.2</span><span class="q-text">What responsibilities absolutely must be delegated?</span></div><div class="q-required">REQUIRED</div><textarea name="exec_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.3</span><span class="q-text">When does supporting a leader become dependency rather than leadership?</span></div><div class="q-required">REQUIRED</div><textarea name="exec_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.4</span><span class="q-text">How do you personally distinguish urgency from importance?</span></div><div class="q-required">REQUIRED</div><textarea name="exec_q4" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.5</span><span class="q-text">Describe an occasion where completing the mission became more important than following the original plan.</span></div><div class="q-required">REQUIRED</div><textarea name="exec_q5" required></textarea></div>
+</div>
+
+<!-- 5 -->
+<div class="section-wrap hidden" id="sec-5">
+  <p class="sec-eyebrow">SECTION 05 OF 13</p>
+  <h2 class="sec-title">Operational Judgement</h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These questions matter most. Where a scenario asks how your thinking evolves, describe the evolution of your reasoning — not only your final answer.</p>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">5.1</span><span class="q-text">The President assigns you three priorities. At 09:00, an unexpected problem prevents one of them from being completed exactly as planned. Walk us through your thinking.</span></div>
+    <div class="q-note">Do not tell us the final answer. Explain how your thinking evolves.</div>
+    <div class="q-required">REQUIRED</div>
+    <textarea name="judgement_q1" required style="min-height:150px;"></textarea>
+  </div>
+  <div class="question-block"><div class="q-label"><span class="q-num">5.2</span><span class="q-text">A non-essential task is blocking an essential organizational objective. How do you decide whether to stop or continue?</span></div><div class="q-required">REQUIRED</div><textarea name="judgement_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">5.3</span><span class="q-text">A volunteer tells you: "I couldn't finish because..." What questions would you ask before responding?</span></div><div class="q-required">REQUIRED</div><textarea name="judgement_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">5.4</span><span class="q-text">You discover that an executive has quietly ignored an organizational process. What would your approach be?</span></div><div class="q-required">REQUIRED</div><textarea name="judgement_q4" required></textarea></div>
+</div>
+
+<!-- 6 -->
+<div class="section-wrap hidden" id="sec-6">
+  <p class="sec-eyebrow">SECTION 06 OF 13</p>
+  <h2 class="sec-title">Leadership Philosophy</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.1</span><span class="q-text">What is the difference between managing work and creating momentum?</span></div><div class="q-required">REQUIRED</div><textarea name="phil_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.2</span><span class="q-text">How do you know when an executive is creating value?</span></div><div class="q-required">REQUIRED</div><textarea name="phil_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.3</span><span class="q-text">How should an executive measure their own performance?</span></div><div class="q-required">REQUIRED</div><textarea name="phil_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.4</span><span class="q-text">Describe your philosophy regarding accountability.</span></div><div class="q-required">REQUIRED</div><textarea name="phil_q4" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.5</span><span class="q-text">How do you earn trust from a President?</span></div><div class="q-required">REQUIRED</div><textarea name="phil_q5" required></textarea></div>
+</div>
+
+<!-- 7 -->
+<div class="section-wrap hidden" id="sec-7">
+  <p class="sec-eyebrow">SECTION 07 OF 13</p>
+  <h2 class="sec-title">Executive Communication</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">7.1</span><span class="q-text">A President gives you a strategic objective. How much progress should they expect to hear from you, and how often? Explain.</span></div><div class="q-required">REQUIRED</div><textarea name="comm_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">7.2</span><span class="q-text">When do you escalate problems?</span></div><div class="q-required">REQUIRED</div><textarea name="comm_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">7.3</span><span class="q-text">Describe your preferred communication rhythm with senior leadership.</span></div><div class="q-required">REQUIRED</div><textarea name="comm_q3" required></textarea></div>
+</div>
+
+<!-- 8 -->
+<div class="section-wrap hidden" id="sec-8">
+  <p class="sec-eyebrow">SECTION 08 OF 13</p>
+  <h2 class="sec-title">Early-Stage Organizations</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">8.1</span><span class="q-text">What advantages exist in joining an organization before it becomes successful?</span></div><div class="q-required">REQUIRED</div><textarea name="early_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">8.2</span><span class="q-text">What challenges exist?</span></div><div class="q-required">REQUIRED</div><textarea name="early_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">8.3</span><span class="q-text">What type of executive thrives in this environment?</span></div><div class="q-required">REQUIRED</div><textarea name="early_q3" required></textarea></div>
+</div>
+
+<!-- 9 -->
+<div class="section-wrap hidden" id="sec-9">
+  <p class="sec-eyebrow">SECTION 09 OF 13</p>
+  <h2 class="sec-title">Systems &amp; Execution</h2>
+  <div class="sec-rule"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">9.1</span><span class="q-text">Describe a time where you inherited disorder. How did you create structure?</span></div><div class="q-required">REQUIRED</div><textarea name="sys_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">9.2</span><span class="q-text">Have you ever built an operational system from scratch? Describe it.</span></div><div class="q-required">REQUIRED</div><textarea name="sys_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">9.3</span><span class="q-text">What operational mistake have you made that fundamentally changed your leadership?</span></div><div class="q-required">REQUIRED</div><textarea name="sys_q3" required></textarea></div>
+</div>
+
+<!-- 10 -->
+<div class="section-wrap hidden" id="sec-10">
+  <p class="sec-eyebrow">SECTION 10 OF 13</p>
+  <h2 class="sec-title">Artificial Intelligence &amp; Modern Executive Work</h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Mind Legacies integrates AI into its executive operating model.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.1</span><span class="q-text">How do you currently use AI professionally?</span></div><div class="q-required">REQUIRED</div><textarea name="ai_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.2</span><span class="q-text">Describe an example where AI improved your decision-making.</span></div><div class="q-required">REQUIRED</div><textarea name="ai_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.3</span><span class="q-text">Which executive responsibilities should never be delegated to AI?</span></div><div class="q-required">REQUIRED</div><textarea name="ai_q3" required></textarea></div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">10.4</span><span class="q-text">How comfortable are you learning new AI systems?</span></div>
+    <div class="q-required">REQUIRED</div>
+    <div class="options-list">
+      <label class="option-item"><input type="radio" name="ai_comfort" value="Very comfortable" required><span class="option-label">Very comfortable</span></label>
+      <label class="option-item"><input type="radio" name="ai_comfort" value="Comfortable"><span class="option-label">Comfortable</span></label>
+      <label class="option-item"><input type="radio" name="ai_comfort" value="Somewhat comfortable"><span class="option-label">Somewhat comfortable</span></label>
+      <label class="option-item"><input type="radio" name="ai_comfort" value="Not comfortable"><span class="option-label">Not comfortable</span></label>
+    </div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="section-wrap hidden" id="sec-11">
+  <p class="sec-eyebrow">SECTION 11 OF 13</p>
+  <h2 class="sec-title">Alignment</h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Rate each statement from Strongly Agree to Strongly Disagree.</p>
+  <div id="likert-container"></div>
+</div>
+
+<!-- 12 -->
+<div class="section-wrap hidden" id="sec-12">
+  <p class="sec-eyebrow">SECTION 12 OF 13</p>
+  <h2 class="sec-title">Reflection</h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">This is the most important section.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.1</span><span class="q-text">You have significant executive experience. Why does an early-stage institution like Mind Legacies interest you at this stage of your career?</span></div><div class="q-required">REQUIRED</div><textarea name="reflect_q1" required style="min-height:150px;"></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.2</span><span class="q-text">Which part of your career best prepared you for helping build — not merely manage — an organization?</span></div><div class="q-required">REQUIRED</div><textarea name="reflect_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.3</span><span class="q-text">If appointed to the Executive Operations Office, what would your first thirty days look like?</span></div><div class="q-required">REQUIRED</div><textarea name="reflect_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.4</span><span class="q-text">What do you hope Mind Legacies would say about your contribution five years from now?</span></div><div class="q-required">REQUIRED</div><textarea name="reflect_q4" required></textarea></div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">12.5</span><span class="q-text">Complete this sentence: "If selected, my responsibility is not to become important within Mind Legacies, but to&nbsp;&mdash;"</span></div>
+    <div class="q-required">REQUIRED</div>
+    <textarea name="reflect_q5" required placeholder="...complete the sentence."></textarea>
+  </div>
+</div>
+
+<!-- 13 -->
+<div class="section-wrap hidden" id="sec-13">
+  <p class="sec-eyebrow">SECTION 13 OF 13</p>
+  <h2 class="sec-title">Before You Submit</h2>
+  <div class="sec-rule"></div>
+  <div class="info-block">
+    <p>Executive recruitment proceeds through several stages:</p>
+    <div class="stage-list">
+      <div class="stage-item"><span class="n">01</span> Executive Gateway Review</div>
+      <div class="stage-item"><span class="n">02</span> Executive Interview</div>
+      <div class="stage-item"><span class="n">03</span> Alignment Review</div>
+      <div class="stage-item"><span class="n">04</span> Final Executive Decision</div>
+    </div>
+    <div class="note-line" style="margin-top:26px;">Due to the executive nature of this office, only shortlisted applicants will be contacted.</div>
+  </div>
+  <div class="confirm-list" style="margin-top:20px;">
+    <label class="confirm-item"><input type="checkbox" name="confirm_review" value="Confirmed" required><span class="confirm-text">I have reviewed my responses and confirm they are accurate to the best of my knowledge.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_no_offer" value="Confirmed" required><span class="confirm-text">I understand that completion of this gateway does not constitute an offer, and that only shortlisted applicants will be contacted.</span></label>
+  </div>
+</div>
+
+<div class="form-nav">
+  <div class="nav-info">SECTION <span id="current-sec-display">1</span> OF <span>13</span></div>
+  <div class="nav-btns">
+    <button type="button" class="nav-btn" id="btn-back" onclick="goBack()" style="display:none;">BACK</button>
+    <button type="button" class="nav-btn primary" id="btn-next" onclick="goNext()"><span>CONTINUE</span></button>
+    <button type="submit" class="nav-btn primary" id="btn-submit" style="display:none;"><span>SUBMIT</span></button>
+  </div>
+</div>
+
+</form>
+</div>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-mark"></div>
+  <h2 class="success-title">Received</h2>
+  <p class="success-body">Thank you for completing the Executive Leadership Recruitment Gateway. Your responses will be reviewed carefully as part of the Executive Gateway Review stage.</p>
+  <div class="success-rule"></div>
+  <p class="success-body">Due to the executive nature of this office, only shortlisted applicants will be contacted regarding next steps.</p>
+</div>
+
+<script>
+const GATE_PASSWORD = "EXEC2026";
+function checkGatePassword() {
+  const input = document.getElementById('gate-input');
+  const error = document.getElementById('gate-error');
+  if (input.value.trim().toLowerCase() === GATE_PASSWORD.toLowerCase()) {
+    document.getElementById('gate-screen').classList.add('hidden');
+    error.classList.remove('show');
+  } else {
+    error.classList.add('show'); input.value=''; input.focus();
+  }
+}
+document.getElementById('gate-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkGatePassword(); });
+
+const likertStatements = [
+  { num:'11.1', name:'likert_excellence', text:'Excellence should remain the organizational standard regardless of growth.' },
+  { num:'11.2', name:'likert_replaceable', text:'Leaders should create systems that eventually make themselves replaceable.' },
+  { num:'11.3', name:'likert_outlive', text:'Institutions should always outlive their founders.' },
+  { num:'11.4', name:'likert_consistency', text:'Operational consistency is more valuable than heroic effort.' },
+  { num:'11.5', name:'likert_governance', text:'Governance should protect long-term stability over short-term convenience.' },
+  { num:'11.6', name:'likert_clarity', text:"A leader's first responsibility is to create clarity." },
+];
+const likertOptions = ['Strongly Agree','Agree','Neutral','Disagree','Strongly Disagree'];
+const likertValues = {};
+const likertContainer = document.getElementById('likert-container');
+
+likertStatements.forEach(s => {
+  likertValues[s.name] = '';
+  const block = document.createElement('div');
+  block.className = 'likert-block';
+  block.innerHTML = `
+    <div class="likert-statement"><span style="color:var(--steel);font-size:11px;letter-spacing:0.1em;margin-right:8px;">${s.num}</span>${s.text}</div>
+    <input type="hidden" name="${s.name}" id="${s.name}" required>
+    <div class="likert-row" id="row-${s.name}">
+      ${likertOptions.map(o => `<div class="likert-opt" data-name="${s.name}" data-val="${o}" onclick="selectLikert('${s.name}','${o}',this)">${o}</div>`).join('')}
+    </div>`;
+  likertContainer.appendChild(block);
+});
+function selectLikert(name, val, el) {
+  likertValues[name] = val;
+  document.getElementById(name).value = val;
+  document.querySelectorAll(`[data-name="${name}"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+let currentSec = 1;
+const totalSecs = 13;
+
+function startForm() {
+  document.getElementById('hero-screen').style.display = 'none';
+  document.getElementById('form-screen').classList.add('active');
+  showSection(1); updateProgress();
+}
+function showSection(n) {
+  for(let i=1;i<=totalSecs;i++){ const el=document.getElementById(`sec-${i}`); if(el) el.classList.add('hidden'); }
+  const target=document.getElementById(`sec-${n}`);
+  if(target) target.classList.remove('hidden');
+  document.getElementById('current-sec-display').textContent = n;
+  document.getElementById('btn-back').style.display = n>1?'block':'none';
+  document.getElementById('btn-next').style.display = n<totalSecs?'block':'none';
+  document.getElementById('btn-submit').style.display = n===totalSecs?'block':'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function updateProgress() { document.getElementById('progress').style.width = (((currentSec-1)/totalSecs)*100)+'%'; }
+
+function validateSection(n) {
+  const sec = document.getElementById(`sec-${n}`);
+  if(!sec) return true;
+  const required = sec.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(el => {
+    if(el.type === 'checkbox') {
+      if(!el.checked){ el.parentElement.style.borderColor='var(--error)'; valid=false; } else { el.parentElement.style.borderColor=''; }
+    } else if(el.type === 'radio') {
+      const checked = sec.querySelector(`[name="${el.name}"]:checked`);
+      if(!checked) valid=false;
+    } else {
+      if(!el.value.trim()){ el.classList.add('invalid'); valid=false; } else { el.classList.remove('invalid'); }
+    }
+  });
+  if(n === 11) {
+    likertStatements.forEach(s => { if(!likertValues[s.name]) valid = false; });
+  }
+  if(!valid){ const fi = sec.querySelector('[required]:invalid, .invalid, input[type=checkbox]'); if(fi) fi.scrollIntoView({behavior:'smooth', block:'center'}); }
+  return valid;
+}
+
+function goNext(){ if(!validateSection(currentSec)) return; if(currentSec<totalSecs){ currentSec++; showSection(currentSec); updateProgress(); } }
+function goBack(){ if(currentSec>1){ currentSec--; showSection(currentSec); updateProgress(); } }
+
+document.getElementById('main-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  if(!validateSection(currentSec)) return;
+  const btn = document.getElementById('btn-submit');
+  btn.innerHTML = '<span>SUBMITTING...</span>'; btn.disabled = true;
+  try {
+    const formData = new FormData(this);
+    const response = await fetch('https://formspree.io/f/xykrepln', { method:'POST', body: formData, headers:{'Accept':'application/json'} });
+    if(response.ok) {
+      document.getElementById('form-screen').classList.remove('active');
+      document.getElementById('success-screen').classList.add('active');
+      document.getElementById('progress').style.width='100%';
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else { throw new Error('Submission failed'); }
+  } catch(err) {
+    btn.innerHTML = '<span>SUBMIT</span>'; btn.disabled = false;
+    alert('There was an error submitting your evaluation. Please try again.');
+  }
+});
+</script>
+</body>
+</html>
