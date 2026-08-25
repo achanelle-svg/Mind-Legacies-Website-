@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYNAPSIS — Executive Discovery Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --midnight: #0B1020;
+  --deepsea: #13223D;
+  --storm: #2A3A4F;
+  --moonlit: #6B7A8C;
+  --lunar: #C7CCD6;
+  --lunar-dim: rgba(199,204,214,0.35);
+  --lunar-ghost: rgba(199,204,214,0.05);
+  --ink: #E9ECEF;
+  --ink-dim: rgba(233,236,239,0.6);
+  --faint: #5A6472;
+  --error: #A85248;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background: var(--midnight); color: var(--ink); font-family:'Satoshi', sans-serif; font-weight:300; }
+.serif { font-family:'Fraunces', serif; }
+
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse at 50% -10%, rgba(199,204,214,0.06), transparent 60%);
+}
+
+.topnav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:18px 40px; background:rgba(11,16,32,0.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--storm); }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-mark { width:26px; height:26px; }
+.brand-name { font-family:'Fraunces', serif; font-size:15px; letter-spacing:0.28em; color:var(--ink); }
+.brand-tag { font-size:7px; letter-spacing:0.18em; color:var(--faint); margin-top:2px; }
+.nav-links { display:flex; gap:26px; }
+.nav-links a { font-size:9px; letter-spacing:0.15em; color:var(--ink-dim); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--lunar); }
+.nav-cta { font-size:9px; letter-spacing:0.2em; color:var(--midnight); background:var(--lunar); padding:10px 20px; text-decoration:none; }
+@media(max-width:900px){ .nav-links{ display:none; } }
+
+section { position:relative; z-index:1; padding:140px 24px 100px; max-width:900px; margin:0 auto; }
+.eyebrow { font-size:8px; letter-spacing:0.5em; color:var(--lunar); margin-bottom:20px; text-align:center; }
+h1.hero-title { font-family:'Fraunces', serif; font-size:clamp(38px,7vw,72px); font-weight:300; text-align:center; line-height:1.06; margin-bottom:24px; }
+h1.hero-title em { font-style:italic; color:var(--lunar); }
+.hero-sub { font-family:'Fraunces', serif; font-size:18px; color:var(--ink-dim); text-align:center; max-width:600px; margin:0 auto 44px; line-height:1.85; font-weight:300; }
+.hero-rule { width:44px; height:1px; background:var(--lunar); margin:0 auto 40px; }
+.cta-btn { display:inline-block; background:transparent; border:1px solid var(--lunar); color:var(--lunar); font-family:'Satoshi',sans-serif; font-size:9px; letter-spacing:0.35em; padding:17px 44px; text-decoration:none; transition:all 0.3s; cursor:pointer; }
+.cta-btn:hover { background:var(--lunar); color:var(--midnight); }
+.cta-wrap { text-align:center; }
+
+h2.sec-title { font-family:'Fraunces', serif; font-size:clamp(28px,4.5vw,42px); font-weight:300; margin-bottom:12px; text-align:center; }
+h2.sec-title em { font-style:italic; color:var(--lunar); }
+.sec-rule { width:36px; height:1px; background:var(--lunar-dim); margin:0 auto 40px; }
+.lead { font-family:'Fraunces', serif; font-size:17px; color:var(--ink-dim); line-height:1.9; text-align:center; max-width:680px; margin:0 auto 40px; font-weight:300; }
+
+.principles-row { display:flex; justify-content:space-between; gap:16px; margin-top:50px; flex-wrap:wrap; }
+.principle { flex:1; min-width:130px; text-align:center; }
+.principle .pmark { width:30px; height:30px; margin:0 auto 14px; border:1px solid var(--lunar-dim); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.principle .pmark span { width:6px; height:6px; background:var(--lunar); border-radius:50%; }
+.principle .pname { font-size:9px; letter-spacing:0.2em; color:var(--lunar); margin-bottom:8px; }
+.principle .pdesc { font-family:'Fraunces', serif; font-size:13px; color:var(--ink-dim); line-height:1.6; }
+
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:24px; }
+@media(max-width:800px){ .grid3{ grid-template-columns:1fr; } }
+.card { border:1px solid var(--storm); padding:28px 24px; background:var(--deepsea); }
+.card h3 { font-family:'Fraunces', serif; font-size:19px; font-weight:400; margin-bottom:10px; color:var(--ink); }
+.card p { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:1.7; font-weight:300; }
+
+.notice { border-left:2px solid var(--lunar); padding:18px 22px; background:var(--lunar-ghost); margin:30px 0; font-family:'Fraunces', serif; font-size:15px; font-style:italic; color:var(--ink); line-height:1.75; font-weight:300; }
+
+.agenda { margin-top:32px; }
+.agenda-row { display:flex; gap:20px; padding:16px 0; border-bottom:1px solid var(--storm); align-items:baseline; }
+.agenda-row:last-child { border-bottom:none; }
+.agenda-time { font-size:11px; letter-spacing:0.1em; color:var(--lunar); min-width:110px; flex-shrink:0; }
+.agenda-text { font-family:'Fraunces', serif; font-size:16px; color:var(--ink-dim); font-weight:300; }
+
+.notlist { display:flex; flex-direction:column; gap:8px; margin-top:20px; max-width:440px; margin-left:auto; margin-right:auto; }
+.notlist div { font-family:'Fraunces', serif; font-size:15px; color:var(--ink-dim); padding:8px 0 8px 20px; position:relative; font-weight:300; }
+.notlist div::before { content:'—'; position:absolute; left:0; color:var(--faint); }
+
+.timeline { display:flex; flex-direction:column; margin-top:30px; }
+.tl-step { display:flex; align-items:center; gap:20px; padding:13px 0; }
+.tl-dot { width:9px; height:9px; border:1px solid var(--lunar); border-radius:50%; flex-shrink:0; }
+.tl-line { width:1px; height:24px; background:var(--storm); margin-left:4px; }
+.tl-text { font-family:'Fraunces', serif; font-size:16px; color:var(--ink); font-weight:300; }
+.tl-note { font-size:11px; color:var(--faint); margin-left:29px; margin-top:-6px; margin-bottom:6px; }
+.tl-wrap { max-width:460px; margin:30px auto 0; }
+
+.pricing-card { border:1px solid var(--lunar-dim); padding:44px; text-align:center; margin-top:20px; background:var(--deepsea); }
+.pricing-card .name { font-size:9px; letter-spacing:0.3em; color:var(--lunar); margin-bottom:16px; }
+.pricing-card .price { font-family:'Fraunces', serif; font-size:32px; color:var(--ink); margin-bottom:8px; font-weight:300; }
+.pricing-card .terms { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:1.85; margin:20px 0; font-weight:300; text-align:left; }
+.pricing-card .terms strong { color:var(--ink); font-weight:500; }
+
+.terms-table { margin-top:30px; border:1px solid var(--storm); }
+.terms-row { display:grid; grid-template-columns:1fr 1.4fr; border-bottom:1px solid var(--storm); }
+.terms-row:last-child { border-bottom:none; }
+.terms-row .tc1 { padding:14px 18px; font-size:11px; letter-spacing:0.03em; color:var(--lunar); background:rgba(199,204,214,0.03); }
+.terms-row .tc2 { padding:14px 18px; font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); font-weight:300; }
+@media(max-width:600px){ .terms-row{ grid-template-columns:1fr; } }
+
+.pricing-note { font-size:11px; color:var(--faint); margin-top:24px; line-height:1.9; }
+
+.faq-item { border-bottom:1px solid var(--storm); padding:22px 0; }
+.faq-q { font-family:'Fraunces', serif; font-size:17px; color:var(--ink); margin-bottom:8px; font-weight:400; }
+.faq-a { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:1.75; font-weight:300; }
+
+.form-wrap { max-width:640px; margin:0 auto; }
+.q-block { margin-bottom:24px; }
+.q-label { font-size:11px; letter-spacing:0.06em; color:var(--ink-dim); margin-bottom:8px; display:block; }
+.q-req { font-size:7px; letter-spacing:0.2em; color:var(--lunar); margin-bottom:6px; display:block; }
+input[type=text], input[type=email], input[type=tel], textarea, select {
+  width:100%; background:rgba(199,204,214,0.03); border:1px solid var(--storm); color:var(--ink);
+  font-family:'Satoshi', sans-serif; font-size:12px; padding:13px 16px; outline:none;
+}
+input:focus, textarea:focus, select:focus { border-color:var(--lunar); }
+textarea { min-height:100px; resize:vertical; line-height:1.6; }
+select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C7CCD6' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; }
+select option { background:var(--midnight); color:var(--ink); }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:640px){ .two-col{ grid-template-columns:1fr; } }
+.consent-row { display:flex; gap:12px; align-items:flex-start; border:1px solid var(--storm); padding:16px 18px; margin-top:8px; }
+.consent-row input { width:15px; height:15px; margin-top:2px; accent-color:var(--lunar); }
+.consent-row label { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:1.6; font-weight:300; }
+.submit-btn { width:100%; margin-top:8px; background:transparent; border:1px solid var(--lunar); color:var(--lunar); font-family:'Satoshi',sans-serif; font-size:10px; letter-spacing:0.3em; padding:16px; cursor:pointer; transition:all 0.3s; }
+.submit-btn:hover { background:var(--lunar); color:var(--midnight); }
+.form-msg { text-align:center; font-family:'Fraunces', serif; font-style:italic; color:var(--lunar); margin-top:16px; display:none; font-weight:300; }
+.form-msg.show { display:block; }
+
+.stepnum { display:inline-block; width:24px; height:24px; border:1px solid var(--storm); border-radius:50%; text-align:center; line-height:22px; font-size:10px; color:var(--faint); margin-right:10px; flex-shrink:0; }
+.next-steps-item { display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--storm); }
+.next-steps-item:last-child { border-bottom:none; }
+.next-steps-text h4 { font-family:'Fraunces', serif; font-size:16px; color:var(--ink); font-weight:400; margin-bottom:4px; }
+.next-steps-text p { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:1.6; font-weight:300; }
+
+footer { position:relative; z-index:1; border-top:1px solid var(--storm); padding:60px 24px 40px; text-align:center; }
+.footer-brand { font-family:'Fraunces', serif; font-size:12px; letter-spacing:0.3em; color:var(--ink); margin-bottom:6px; }
+.footer-sub { font-size:8px; letter-spacing:0.18em; color:var(--faint); margin-bottom:28px; }
+.footer-contacts { font-family:'Fraunces', serif; font-size:14px; color:var(--ink-dim); line-height:2; margin-bottom:24px; font-weight:300; }
+.footer-legal { font-size:10px; color:var(--faint); max-width:520px; margin:0 auto; line-height:1.9; }
+
+.hero-wrap { padding-top:180px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="21" stroke="#C7CCD6" stroke-width="1" opacity="0.5"/>
+      <circle cx="30" cy="30" r="14" stroke="#C7CCD6" stroke-width="1" opacity="0.75"/>
+      <circle cx="30" cy="30" r="7" stroke="#C7CCD6" stroke-width="1.1" opacity="1"/>
+      <circle cx="30" cy="30" r="1.8" fill="#C7CCD6"/>
+    </svg>
+    <div>
+      <div class="brand-name">SYNAPSIS</div>
+      <div class="brand-tag">IDENTIFY · ARCHITECT · ELEVATE</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#session">Discovery Session</a>
+    <a href="#process">Process</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#request" class="nav-cta">Begin Discovery Request</a>
+</nav>
+
+<!-- PAGE 1 — WELCOME -->
+<section class="hero-wrap" id="welcome" style="position:relative; overflow:hidden;">
+  <svg style="position:absolute; top:-120px; left:50%; transform:translateX(-50%); width:900px; height:900px; opacity:0.12; pointer-events:none; z-index:0;" viewBox="0 0 900 900" fill="none">
+    <circle cx="450" cy="450" r="420" stroke="#C7CCD6" stroke-width="1"/>
+    <circle cx="450" cy="450" r="320" stroke="#C7CCD6" stroke-width="1"/>
+    <circle cx="450" cy="450" r="220" stroke="#C7CCD6" stroke-width="1"/>
+  </svg>
+  <p class="eyebrow" style="position:relative;">EXECUTIVE DISCOVERY PORTAL</p>
+  <h1 class="hero-title" style="position:relative;">Understand the People<br>Your Company <em>Exists to Serve.</em></h1>
+  <div class="hero-rule" style="position:relative;"></div>
+  <p class="hero-sub" style="position:relative;">SYNAPSIS, developed by Mind Legacies, applies Structural Predictive Intelligence — a structural approach to understanding and anticipating behaviour, not merely describing it after the fact — to help executives understand their customers with a depth conventional research doesn't reach. Every engagement begins with a single, structured conversation: the Executive Discovery Session.</p>
+  <div class="cta-wrap" style="position:relative;"><a href="#request" class="cta-btn">Begin Discovery Request</a></div>
+</section>
+
+<!-- PAGE 2 — ABOUT -->
+<section id="about">
+  <p class="eyebrow">ABOUT SYNAPSIS</p>
+  <h2 class="sec-title">Structural Predictive Intelligence, <em>Applied to Customers</em></h2>
+  <div class="sec-rule"></div>
+  <p class="lead">Most firms study your company. SYNAPSIS studies the people your company exists to serve. Structural Predictive Intelligence is a distinct approach to intelligence, developed by Mind Legacies, that builds a structural model of a customer group in order to anticipate their behaviour, not simply describe it after the fact. Applied to the customer information gathered in your Discovery Session, it produces a structured model of your target audience — surfacing likely motivations, tensions, and behavioral patterns your team may already have noticed, but never had language for.</p>
+  <div class="grid3">
+    <div class="card"><h3>Structural Predictive Intelligence</h3><p>A distinct approach to intelligence that builds a structural model of identity and behaviour in order to anticipate what conventional analysis can only describe after the fact.</p></div>
+    <div class="card"><h3>Customer Intelligence, Not Diagnostics</h3><p>SYNAPSIS exists to help you understand the people your company serves — not to audit your company itself.</p></div>
+    <div class="card"><h3>Hypotheses, Not Oracles</h3><p>Every finding is a structured hypothesis to test against your own expertise and research — never presented as observed fact.</p></div>
+  </div>
+  <div class="principles-row">
+    <div class="principle"><div class="pmark"><span></span></div><div class="pname">DISCOVERY</div><div class="pdesc">We explore what exists beneath the visible.</div></div>
+    <div class="principle"><div class="pmark"><span></span></div><div class="pname">COGNITION</div><div class="pdesc">We design intelligence that understands context.</div></div>
+    <div class="principle"><div class="pmark"><span></span></div><div class="pname">PRECISION</div><div class="pdesc">We build with accuracy, rigor, and clarity.</div></div>
+    <div class="principle"><div class="pmark"><span></span></div><div class="pname">CONTINUITY</div><div class="pdesc">We create systems that learn and evolve.</div></div>
+    <div class="principle"><div class="pmark"><span></span></div><div class="pname">LEGACY</div><div class="pdesc">We engineer impact that outlives generations.</div></div>
+  </div>
+  <div class="notice" style="margin-top:44px;">This is an expert-led consulting engagement. No software is sold during this stage.</div>
+</section>
+
+<!-- SYNAPSIS SIMULATION -->
+<section id="simulation">
+  <p class="eyebrow">THE SYNAPSIS SIMULATION</p>
+  <h2 class="sec-title">What It <em>Actually</em> Produces</h2>
+  <div class="sec-rule"></div>
+  <p class="lead">Following your Discovery Session, the customer information gathered is processed through the SYNAPSIS Simulation — our proprietary Structural Predictive Intelligence process. The method itself is proprietary. What it produces is not.</p>
+
+  <div class="tl-wrap">
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Customer Information</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Structured Identity Model</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Strategic Interrogation</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot" style="background:var(--lunar);"></div><div class="tl-text" style="color:var(--lunar);">Customer Intelligence Findings</div></div>
+  </div>
+
+  <p class="lead" style="margin-top:36px;">The result is not a survey, and it is not a guess. It is a structured hypothesis about how a defined customer group is likely to think, feel, and behave — often explaining behaviors your team has already noticed, but never fully understood.</p>
+
+  <div class="notice">This report contains hypotheses generated through the proprietary SYNAPSIS Simulation Framework, intended to support strategic decision-making. It is meant to be used alongside your own organizational expertise, customer research, and executive judgment — not as a substitute for them.</div>
+
+  <p class="lead">Every report separates what was directly observed in your Discovery Session from what was modeled through the SYNAPSIS Simulation, and from the strategic implications drawn from that model — so you always know where a finding comes from.</p>
+</section>
+
+<!-- RESEARCH INITIATIVE -->
+<section id="research">
+  <p class="eyebrow">THE RESEARCH INITIATIVE</p>
+  <h2 class="sec-title">Beyond the Engagement, <em>A Scientific Question</em></h2>
+  <div class="sec-rule"></div>
+  <p class="lead">SYNAPSIS is more than a commercial service. It is the applied, real-world testing ground for an active research program: whether Structural Predictive Intelligence is a genuine, distinct category of intelligence — not simply a more detailed way of describing customer behaviour, but a structural approach capable of anticipating it.</p>
+  <p class="lead">That question is not yet answered. Mind Legacies is pursuing it deliberately and in stages, building evidence through real engagements before presenting the work for independent, external scientific investigation. With a client's consent, anonymized findings from an engagement may contribute, in aggregate, to that broader research effort.</p>
+  <div class="notice">We are candid about where that research currently stands: promising, under active development, and not yet independently validated. Every claim on this portal is scoped to what a Discovery Session and the SYNAPSIS Simulation can responsibly deliver today — not to where the underlying research is ultimately headed.</div>
+</section>
+
+<!-- PAGE 3 — DISCOVERY SESSION -->
+<section id="session">
+  <p class="eyebrow">THE DISCOVERY SESSION</p>
+  <h2 class="sec-title">What to <em>Expect</em></h2>
+  <div class="sec-rule"></div>
+  <p class="lead">The Executive Discovery Session is a focused, one-hour executive conversation — not a sales call, and not a technical demonstration. It exists to understand your organization and determine whether, and how, SYNAPSIS can help.</p>
+
+  <div class="agenda">
+    <div class="agenda-row"><div class="agenda-time">5 MIN</div><div class="agenda-text">Welcome and introductions</div></div>
+    <div class="agenda-row"><div class="agenda-time">15 MIN</div><div class="agenda-text">Understanding your organization and current challenges</div></div>
+    <div class="agenda-row"><div class="agenda-time">15 MIN</div><div class="agenda-text">Discussion of strategic objectives and opportunities</div></div>
+    <div class="agenda-row"><div class="agenda-time">15 MIN</div><div class="agenda-text">Introduction to the SYNAPSIS framework and potential areas of application</div></div>
+    <div class="agenda-row"><div class="agenda-time">10 MIN</div><div class="agenda-text">Questions, next steps, and explanation of the Executive Summary process</div></div>
+  </div>
+
+  <p class="lead" style="margin-top:36px;">Attendees typically include the sponsoring executive and, where relevant, one or two senior colleagues closest to the challenge being discussed. Following your session, you will receive an Executive Customer Intelligence Report summarizing the discussion and outlining potential next steps.</p>
+
+  <p class="lead" style="font-weight:400; color:var(--ink);">The Discovery Session is exploratory. It is not:</p>
+  <div class="notlist">
+    <div>Implementation</div>
+    <div>Consulting delivery</div>
+    <div>Software deployment</div>
+    <div>A guarantee of partnership</div>
+  </div>
+</section>
+
+<!-- PAGE 4 — PROCESS -->
+<section id="process">
+  <p class="eyebrow">THE COMMERCIAL PROCESS</p>
+  <h2 class="sec-title">From Request to <em>Partnership</em></h2>
+  <div class="sec-rule"></div>
+  <div class="tl-wrap">
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Discovery Request</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Commercial Review</div></div>
+    <div class="tl-note">We confirm genuine fit before proposing a session.</div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Terms &amp; Payment</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Booking Confirmed</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot" style="background:var(--lunar);"></div><div class="tl-text" style="color:var(--lunar);">Executive Discovery Session</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Executive Customer Intelligence Report</div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Founding Partner Programme <span style="color:var(--faint); font-size:12px;">(where eligible)</span></div></div>
+    <div class="tl-line"></div>
+    <div class="tl-step"><div class="tl-dot"></div><div class="tl-text">Official V0A Licensing</div></div>
+  </div>
+</section>
+
+<!-- PAGE 5 — PRICING -->
+<section id="pricing">
+  <p class="eyebrow">INVESTMENT</p>
+  <h2 class="sec-title">Executive Discovery <em>Session</em></h2>
+  <div class="sec-rule"></div>
+  <div class="pricing-card">
+    <div class="name">EXECUTIVE DISCOVERY SESSION</div>
+    <div class="price">Confirmed at Commercial Review</div>
+    <div class="terms">
+      <strong>Payment:</strong> the full session fee is payable in advance. Your booking is confirmed only once payment has been received and validated.<br><br>
+      <strong>Payment deadline:</strong> payment must be received no later than 48 hours prior to your scheduled session.<br><br>
+      <strong>If you proceed to the Founding Partner Programme:</strong> your Discovery Session fee is deducted from the total programme fee.<br><br>
+      <strong>Refunds:</strong> the Discovery Session fee is non-refundable once the session has been delivered.
+    </div>
+  </div>
+
+  <div class="terms-table">
+    <div class="terms-row"><div class="tc1">RESCHEDULE — 48+ HOURS NOTICE</div><div class="tc2">One reschedule permitted at no charge.</div></div>
+    <div class="terms-row"><div class="tc1">RESCHEDULE — UNDER 48 HOURS</div><div class="tc2">An administrative fee applies. Subject to availability.</div></div>
+    <div class="terms-row"><div class="tc1">CANCELLATION — 48+ HOURS NOTICE</div><div class="tc2">Full refund, minus the administrative fee.</div></div>
+    <div class="terms-row"><div class="tc1">CANCELLATION — UNDER 48 HOURS</div><div class="tc2">No refund. The session fee is retained.</div></div>
+    <div class="terms-row"><div class="tc1">LATE ARRIVAL (15+ MINUTES)</div><div class="tc2">Session proceeds for the remaining time. No extension granted.</div></div>
+    <div class="terms-row"><div class="tc1">NO-SHOW</div><div class="tc2">No refund. A new booking requires full payment.</div></div>
+  </div>
+  <p class="pricing-note">Full commercial terms are confirmed in writing at the Terms &amp; Payment stage of your engagement. There are no hidden conditions beyond what is stated there.</p>
+</section>
+
+<!-- PAGE 6 — FAQ -->
+<section id="faq">
+  <p class="eyebrow">FREQUENTLY ASKED QUESTIONS</p>
+  <h2 class="sec-title">Common <em>Questions</em></h2>
+  <div class="sec-rule"></div>
+  <div class="faq-item"><div class="faq-q">What happens during the Discovery Session?</div><div class="faq-a">A structured, one-hour executive conversation covering your organization, its current challenges, your strategic objectives, and how the SYNAPSIS framework may apply. See the agenda above for the full breakdown.</div></div>
+  <div class="faq-item"><div class="faq-q">Who should attend?</div><div class="faq-a">The sponsoring executive, and where relevant, one or two senior colleagues closest to the challenge being discussed.</div></div>
+  <div class="faq-item"><div class="faq-q">Is this software?</div><div class="faq-a">No. SYNAPSIS is a Structural Predictive Intelligence framework, applied through an expert-led process. The Discovery Session and the SYNAPSIS Simulation that follows are a service, not a software product you install or manage.</div></div>
+  <div class="faq-item"><div class="faq-q">What is Structural Predictive Intelligence?</div><div class="faq-a">A distinct approach to intelligence that builds a structural model of a customer group's identity and behaviour, used to anticipate likely patterns rather than simply describe past ones. Applied to your customers, it produces a structured hypothesis about their motivations, tensions, and behavior — not a definitive account of what they think.</div></div>
+  <div class="faq-item"><div class="faq-q">Are SYNAPSIS findings scientifically proven?</div><div class="faq-a">SYNAPSIS findings are structured hypotheses generated through our proprietary framework, intended to sit alongside your own expertise and research — not certainties, and not a substitute for your own judgment.</div></div>
+  <div class="faq-item"><div class="faq-q">Can multiple executives attend?</div><div class="faq-a">Yes. Please list all expected attendees in your Discovery Request so we can prepare accordingly.</div></div>
+  <div class="faq-item"><div class="faq-q">How long does it take?</div><div class="faq-a">The session itself runs approximately one hour, as set out in the agenda above.</div></div>
+  <div class="faq-item"><div class="faq-q">What happens after the meeting?</div><div class="faq-a">You will receive an Executive Customer Intelligence Report. Where there is genuine fit, you may be invited to discuss the Founding Partner Programme — a four-month engagement, limited to three organizations across the full programme, with one organization admitted per industry sector.</div></div>
+  <div class="faq-item"><div class="faq-q">Is payment refundable?</div><div class="faq-a">The Discovery Session fee is non-refundable once delivered. See the cancellation and reschedule terms in the Pricing section above for the full policy.</div></div>
+</section>
+
+<!-- PAGE 7 — REQUEST FORM -->
+<section id="request">
+  <p class="eyebrow">EXECUTIVE DISCOVERY REQUEST</p>
+  <h2 class="sec-title">Begin the <em>Conversation</em></h2>
+  <div class="sec-rule"></div>
+  <p class="lead">Please complete the form below. Every request is reviewed by the Commercial Division to confirm genuine fit before a Discovery Session is proposed.</p>
+
+  <div class="form-wrap">
+  <form id="discovery-form" action="https://formspree.io/f/xykrepln" method="POST">
+    <input type="hidden" name="_subject" value="SYNAPSIS — New Executive Discovery Request">
+    <input type="hidden" name="_replyto" id="reply-to-field">
+
+    <div class="two-col">
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Organization Name</label><input type="text" name="organization_name" required></div>
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Industry</label><input type="text" name="industry" required></div>
+    </div>
+    <div class="two-col">
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Country</label><input type="text" name="country" required></div>
+      <div class="q-block"><label class="q-label">Website</label><input type="text" name="website" placeholder="https://"></div>
+    </div>
+    <div class="two-col">
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Primary Contact Name</label><input type="text" name="contact_name" required></div>
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Role / Title</label><input type="text" name="contact_role" required></div>
+    </div>
+    <div class="two-col">
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Email Address</label><input type="email" name="email" required oninput="document.getElementById('reply-to-field').value=this.value"></div>
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Phone Number</label><input type="tel" name="phone" required></div>
+    </div>
+    <div class="two-col">
+      <div class="q-block">
+        <span class="q-req">REQUIRED</span><label class="q-label">Company Size</label>
+        <select name="company_size" required>
+          <option value="">Select</option>
+          <option>1–10 employees</option><option>11–50 employees</option><option>51–200 employees</option>
+          <option>201–1000 employees</option><option>1000+ employees</option>
+        </select>
+      </div>
+      <div class="q-block"><label class="q-label">Approximate Number of Employees</label><input type="text" name="approx_employees"></div>
+    </div>
+
+    <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Current Business Challenge</label><textarea name="business_challenge" required></textarea></div>
+    <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Strategic Objectives</label><textarea name="strategic_objectives" required></textarea></div>
+    <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Why are you interested in SYNAPSIS?</label><textarea name="why_synapsis" required></textarea></div>
+    <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Desired Outcomes</label><textarea name="desired_outcomes" required></textarea></div>
+
+    <div class="two-col">
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Preferred Meeting Dates</label><input type="text" name="preferred_dates" placeholder="e.g. 4–8 August 2026" required></div>
+      <div class="q-block"><span class="q-req">REQUIRED</span><label class="q-label">Timezone</label><input type="text" name="timezone" placeholder="e.g. SAST (UTC+2)" required></div>
+    </div>
+    <div class="q-block"><label class="q-label">How did you hear about us?</label><input type="text" name="referral_source"></div>
+
+    <div class="consent-row">
+      <input type="checkbox" name="consent" id="consent" value="Confirmed" required>
+      <label for="consent">I consent to SYNAPSIS and Mind Legacies processing the information above for the purpose of reviewing this Discovery Request, in accordance with the Privacy Statement.</label>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn"><span>SUBMIT DISCOVERY REQUEST</span></button>
+    <p class="form-msg" id="form-msg">Thank you — your request has been received. See "What Happens Next" below.</p>
+  </form>
+  </div>
+</section>
+
+<!-- PAGE 8 — WHAT HAPPENS NEXT -->
+<section id="next-steps">
+  <p class="eyebrow">AFTER YOUR REQUEST</p>
+  <h2 class="sec-title">What Happens <em>Next</em></h2>
+  <div class="sec-rule"></div>
+  <p class="lead">Before your Discovery Session can be confirmed, your request is reviewed, terms are agreed, and payment is received. Your booking becomes official only once payment has been received and validated.</p>
+
+  <div style="max-width:600px; margin:0 auto;">
+    <div class="next-steps-item">
+      <span class="stepnum">1</span>
+      <div class="next-steps-text"><h4>Commercial Review</h4><p>The Commercial Division reviews your request to confirm genuine fit, typically within two business days.</p></div>
+    </div>
+    <div class="next-steps-item">
+      <span class="stepnum">2</span>
+      <div class="next-steps-text"><h4>Terms &amp; Invoice</h4><p>You will receive your session terms and invoice by email, including the payment reference and deadline.</p></div>
+    </div>
+    <div class="next-steps-item">
+      <span class="stepnum">3</span>
+      <div class="next-steps-text"><h4>Payment</h4><p>Payment must be received no later than 48 hours prior to your session. Please send proof of payment to the commercial contact below, quoting your reference.</p></div>
+    </div>
+    <div class="next-steps-item">
+      <span class="stepnum">4</span>
+      <div class="next-steps-text"><h4>Booking Confirmed</h4><p>Once payment is validated, your session is confirmed and calendar details are sent, along with meeting guidelines.</p></div>
+    </div>
+    <div class="next-steps-item">
+      <span class="stepnum">5</span>
+      <div class="next-steps-text"><h4>Executive Discovery Session</h4><p>Your one-hour executive conversation, as outlined above.</p></div>
+    </div>
+    <div class="next-steps-item">
+      <span class="stepnum">6</span>
+      <div class="next-steps-text"><h4>Executive Customer Intelligence Report</h4><p>A structured summary and outline of potential next steps, including Founding Partner Programme eligibility where applicable.</p></div>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:30px;">If you have any questions at any stage of this process, the commercial contact below is your single point of contact throughout.</p>
+</section>
+
+<footer>
+  <div class="footer-brand">SYNAPSIS</div>
+  <div class="footer-sub">A MIND LEGACIES RESEARCH INSTITUTE · IDENTIFY · ARCHITECT · ELEVATE</div>
+  <div class="footer-contacts">
+    Commercial enquiries: Synapsis@Mindlegacies.com
+  </div>
+  <p class="footer-legal">This portal and all information submitted through it are treated as confidential. Personal and organizational information is processed solely for the purpose of evaluating and progressing your Discovery Request, in accordance with SYNAPSIS' Privacy Statement. Full commercial terms are provided in writing at the Terms &amp; Payment stage of your engagement.</p>
+</footer>
+
+<script>
+document.getElementById('discovery-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  btn.innerHTML = '<span>SUBMITTING...</span>';
+  btn.disabled = true;
+  try {
+    const formData = new FormData(this);
+    const response = await fetch('https://formspree.io/f/xykrepln', { method:'POST', body: formData, headers:{ 'Accept':'application/json' } });
+    if (response.ok) {
+      this.reset();
+      btn.style.display = 'none';
+      document.getElementById('form-msg').classList.add('show');
+      document.getElementById('next-steps').scrollIntoView({ behavior:'smooth' });
+    } else { throw new Error('Submission failed'); }
+  } catch (err) {
+    btn.innerHTML = '<span>SUBMIT DISCOVERY REQUEST</span>';
+    btn.disabled = false;
+    alert('There was an error submitting your request. Please try again, or email the commercial contact below directly.');
+  }
+});
+</script>
+</body>
+</html>
