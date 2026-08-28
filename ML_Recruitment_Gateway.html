@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Legacies — Recruitment Gateway</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #080c0f;
+  --deep: #0C1519;
+  --surf: #162127;
+  --mid: #3A3534;
+  --gold: #CF9D7B;
+  --gold-dim: rgba(207,157,123,0.3);
+  --gold-ghost: rgba(207,157,123,0.07);
+  --silver: #8B908E;
+  --white: #F0ECE4;
+  --white-dim: rgba(240,236,228,0.6);
+  --light: #F5F1EC;
+  --success: #2D6A4F;
+  --error: #8B2020;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background: var(--deep); color: var(--white); font-family: 'Josefin Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+body::before { content:''; position:fixed; inset:0; background-image: linear-gradient(rgba(207,157,123,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(207,157,123,0.02) 1px, transparent 1px); background-size:72px 72px; pointer-events:none; z-index:0; }
+
+.gate-screen { position:fixed; inset:0; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--deep); text-align:center; padding:24px; }
+.gate-screen.hidden { display:none; }
+.gate-logo { width:36px; height:36px; margin-bottom:28px; }
+.gate-eyebrow { font-size:8px; letter-spacing:0.5em; color:var(--gold); margin-bottom:20px; }
+.gate-title { font-family:'Cormorant Garamond', serif; font-size:clamp(30px,5vw,44px); font-weight:300; color:var(--white); margin-bottom:12px; }
+.gate-title em { font-style:italic; color:var(--gold); }
+.gate-desc { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white-dim); max-width:420px; line-height:1.7; margin-bottom:36px; }
+.gate-form { display:flex; flex-direction:column; align-items:center; gap:18px; width:100%; max-width:320px; }
+.gate-input { width:100%; background:rgba(22,33,39,0.8); border:1px solid rgba(207,157,123,0.25); border-radius:2px; color:var(--white); font-family:'Josefin Sans', sans-serif; font-size:12px; letter-spacing:0.15em; text-align:center; padding:16px 18px; outline:none; }
+.gate-input:focus { border-color:rgba(207,157,123,0.6); }
+.gate-btn { width:100%; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.4em; padding:16px; cursor:pointer; transition:all 0.3s; }
+.gate-btn:hover { background:var(--gold); color:var(--deep); }
+.gate-error { font-size:10px; letter-spacing:0.2em; color:var(--error); margin-top:4px; display:none; }
+.gate-error.show { display:block; }
+
+.site-header { position:fixed; top:0; left:0; right:0; z-index:100; padding:20px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(207,157,123,0.1); background:rgba(8,12,15,0.95); backdrop-filter:blur(12px); }
+.logo-wrap { display:flex; align-items:center; gap:14px; }
+.logo-svg { width:32px; height:32px; }
+.logo-text .name { font-size:11px; letter-spacing:0.28em; color:var(--gold); display:block; }
+.logo-text .tag  { font-size:7px;  letter-spacing:0.3em;  color:var(--silver); margin-top:2px; display:block; }
+.header-right { font-size:7px; letter-spacing:0.35em; color:var(--silver); text-align:right; line-height:1.9; }
+.header-right span { color:var(--gold); }
+
+.progress-wrap { position:fixed; top:64px; left:0; right:0; z-index:99; height:2px; background:rgba(207,157,123,0.1); }
+.progress-fill { height:100%; background:var(--gold); width:0%; transition:width 0.5s ease; }
+
+.hero { min-height:100vh; position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px 48px 80px; }
+.hero-eyebrow { font-size:8px; letter-spacing:0.55em; color:var(--gold); margin-bottom:32px; animation:fadeUp 0.9s ease 0.2s both; }
+.hero-title { font-family:'Cormorant Garamond', serif; font-size:clamp(42px,7vw,80px); font-weight:300; line-height:0.98; color:var(--white); margin-bottom:6px; animation:fadeUp 0.9s ease 0.4s both; }
+.hero-title em { font-style:italic; color:var(--gold); }
+.hero-sub { font-size:8px; letter-spacing:0.45em; color:var(--silver); margin-bottom:44px; animation:fadeUp 0.9s ease 0.6s both; }
+.hero-vline { width:1px; height:52px; background:linear-gradient(180deg,transparent,var(--gold),transparent); margin:0 auto 44px; animation:fadeUp 0.9s ease 0.8s both; }
+.hero-desc { font-family:'Cormorant Garamond', serif; font-size:18px; font-weight:300; color:var(--white-dim); max-width:560px; line-height:1.75; margin:0 auto 32px; animation:fadeUp 0.9s ease 1s both; }
+.hero-note { font-size:10px; letter-spacing:0.15em; color:var(--silver); max-width:520px; margin:0 auto 44px; line-height:1.9; animation:fadeUp 0.9s ease 1.1s both; }
+.hero-meta { display:flex; gap:40px; justify-content:center; animation:fadeUp 0.9s ease 1.2s both; }
+.hero-meta-item { text-align:center; }
+.hero-meta-item .val { font-size:22px; font-weight:300; color:var(--gold); font-family:'Cormorant Garamond',serif; display:block; }
+.hero-meta-item .lbl { font-size:7px; letter-spacing:0.35em; color:var(--silver); margin-top:4px; display:block; }
+.start-btn { display:inline-block; margin-top:52px; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.45em; padding:18px 52px; cursor:pointer; position:relative; overflow:hidden; transition:color 0.35s; text-decoration:none; animation:fadeUp 0.9s ease 1.4s both; }
+.start-btn::before { content:''; position:absolute; inset:0; background:var(--gold); transform:translateX(-101%); transition:transform 0.35s ease; }
+.start-btn:hover::before { transform:translateX(0); }
+.start-btn:hover { color:var(--deep); }
+.start-btn span { position:relative; z-index:1; }
+
+.form-outer { display:none; position:relative; z-index:1; min-height:100vh; padding:100px 24px 80px; }
+.form-outer.active { display:block; }
+.form-inner { max-width:780px; margin:0 auto; }
+
+.section-wrap { margin-bottom:60px; }
+.section-wrap.hidden { display:none; }
+.sec-eyebrow { font-size:7px; letter-spacing:0.55em; color:var(--gold); margin-bottom:14px; }
+.sec-title { font-family:'Cormorant Garamond', serif; font-size:clamp(30px,5vw,48px); font-weight:300; color:var(--white); line-height:0.98; margin-bottom:8px; }
+.sec-title em { font-style:italic; color:var(--gold); }
+.sec-rule { height:1px; background:linear-gradient(90deg,var(--gold),transparent); margin:20px 0 28px; }
+.sec-desc { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:300; color:var(--white-dim); line-height:1.75; margin-bottom:32px; border-left:2px solid var(--gold-dim); padding-left:18px; font-style:italic; }
+
+.info-block { margin-bottom:24px; }
+.info-block p { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:300; color:var(--white-dim); line-height:1.8; margin-bottom:14px; }
+.info-block ul { list-style:none; margin:14px 0 14px 0; }
+.info-block ul li { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white-dim); line-height:1.7; padding:6px 0 6px 24px; position:relative; }
+.info-block ul li::before { content:'✦'; position:absolute; left:0; color:var(--gold); font-size:10px; }
+.info-callout { border-left:3px solid var(--gold); padding:18px 22px; background:var(--gold-ghost); margin:20px 0; font-family:'Cormorant Garamond', serif; font-size:16px; font-style:italic; color:var(--white); line-height:1.75; }
+.info-quote { text-align:center; padding:28px; border:1px solid var(--gold-dim); background:var(--gold-ghost); margin:24px 0; }
+.info-quote .quote-text { font-family:'Cormorant Garamond', serif; font-size:20px; font-style:italic; color:var(--white); line-height:1.6; }
+
+.progression { border:1px solid var(--gold-dim); margin:24px 0; }
+.prog-item { padding:16px 24px; text-align:center; border-bottom:1px solid var(--gold-dim); position:relative; }
+.prog-item:last-child { border-bottom:none; }
+.prog-item:first-child { background:var(--surf); }
+.prog-title { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white); }
+.prog-item:first-child .prog-title { color:var(--gold); font-weight:500; }
+.prog-arrow { color:var(--gold); font-size:18px; margin-top:8px; display:block; }
+
+.question-block { margin-bottom:36px; }
+.q-label { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
+.q-num { font-size:9px; letter-spacing:0.2em; color:var(--gold); font-weight:600; padding-top:2px; flex-shrink:0; min-width:32px; }
+.q-text { font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:400; color:var(--white); line-height:1.5; }
+.q-note { font-size:12px; color:var(--silver); font-style:italic; margin-top:6px; margin-left:42px; font-family:'Cormorant Garamond',serif; }
+.q-required { font-size:7px; letter-spacing:0.3em; color:var(--gold); margin-left:42px; margin-bottom:10px; }
+.q-optional { font-size:7px; letter-spacing:0.3em; color:var(--silver); margin-left:42px; margin-bottom:10px; }
+
+input[type=text], input[type=email], input[type=tel], input[type=password], textarea, select {
+  width:100%; background:rgba(22,33,39,0.8); border:1px solid rgba(207,157,123,0.2); border-radius:2px;
+  color:var(--white); font-family:'Josefin Sans', sans-serif; font-size:11px; font-weight:300; letter-spacing:0.1em;
+  padding:14px 18px; outline:none; transition:border-color 0.3s, background 0.3s; -webkit-appearance:none; appearance:none;
+}
+input::placeholder, textarea::placeholder { color:rgba(139,144,142,0.4); }
+input:focus, textarea:focus, select:focus { border-color:rgba(207,157,123,0.5); background:rgba(22,33,39,0.95); }
+textarea { resize:vertical; min-height:120px; line-height:1.6; }
+select { cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23CF9D7B' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+select option { background:var(--deep); color:var(--white); }
+
+.options-list { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+.option-item { display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border:1px solid rgba(207,157,123,0.12); cursor:pointer; transition:all 0.2s; background:rgba(22,33,39,0.4); }
+.option-item:hover { border-color:rgba(207,157,123,0.35); background:var(--gold-ghost); }
+.option-item input[type=radio], .option-item input[type=checkbox] { width:16px; height:16px; flex-shrink:0; margin-top:2px; accent-color:var(--gold); cursor:pointer; padding:0; border:none; background:none; }
+.option-label { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white-dim); cursor:pointer; line-height:1.5; }
+
+.scale-wrap { display:flex; align-items:center; gap:12px; margin-top:8px; flex-wrap:wrap; }
+.scale-label { font-size:10px; letter-spacing:0.15em; color:var(--silver); white-space:nowrap; }
+.scale-numbers { display:flex; gap:6px; flex:1; justify-content:space-between; min-width:220px; }
+.scale-btn { width:36px; height:36px; border:1px solid rgba(207,157,123,0.2); background:rgba(22,33,39,0.4); color:var(--silver); font-family:'Josefin Sans',sans-serif; font-size:11px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; border-radius:2px; }
+.scale-btn:hover { border-color:var(--gold); color:var(--gold); }
+.scale-btn.selected { border-color:var(--gold); background:var(--gold); color:var(--deep); font-weight:600; }
+
+.confirm-list { display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+.confirm-item { display:flex; align-items:flex-start; gap:14px; padding:14px 18px; border:1px solid rgba(207,157,123,0.15); background:rgba(22,33,39,0.4); }
+.confirm-item input[type=checkbox] { width:16px; height:16px; flex-shrink:0; margin-top:2px; accent-color:var(--gold); cursor:pointer; padding:0; border:none; background:none; }
+.confirm-text { font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white-dim); line-height:1.6; }
+
+.form-nav { display:flex; align-items:center; justify-content:space-between; margin-top:52px; padding-top:32px; border-top:1px solid rgba(207,157,123,0.1); }
+.nav-info { font-size:8px; letter-spacing:0.3em; color:var(--silver); }
+.nav-info span { color:var(--gold); }
+.nav-btns { display:flex; gap:12px; }
+.nav-btn { background:transparent; border:1px solid rgba(207,157,123,0.3); color:var(--silver); font-family:'Josefin Sans',sans-serif; font-size:9px; font-weight:300; letter-spacing:0.4em; padding:14px 32px; cursor:pointer; transition:all 0.3s; }
+.nav-btn:hover { border-color:var(--gold); color:var(--gold); }
+.nav-btn.primary { border-color:var(--gold); color:var(--gold); position:relative; overflow:hidden; }
+.nav-btn.primary::before { content:''; position:absolute; inset:0; background:var(--gold); transform:translateX(-101%); transition:transform 0.3s ease; }
+.nav-btn.primary:hover::before { transform:translateX(0); }
+.nav-btn.primary:hover { color:var(--deep); }
+.nav-btn span { position:relative; z-index:1; }
+
+input.invalid, textarea.invalid, select.invalid { border-color:rgba(139,32,32,0.5) !important; }
+
+.success-screen { display:none; position:relative; z-index:1; min-height:100vh; padding:120px 48px 80px; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.success-screen.active { display:flex; }
+.success-icon { font-size:40px; color:var(--gold); margin-bottom:32px; }
+.success-title { font-family:'Cormorant Garamond', serif; font-size:clamp(36px,5vw,64px); font-weight:300; color:var(--white); line-height:0.95; margin-bottom:16px; }
+.success-title em { font-style:italic; color:var(--gold); }
+.success-body { font-family:'Cormorant Garamond', serif; font-size:18px; font-weight:300; color:var(--white-dim); max-width:540px; line-height:1.8; margin:0 auto; }
+.success-rule { width:60px; height:1px; background:var(--gold); margin:32px auto; }
+.stage-list { text-align:left; max-width:420px; margin:24px auto 0; }
+.stage-item { display:flex; align-items:baseline; gap:14px; padding:9px 0; border-bottom:1px solid rgba(207,157,123,0.12); font-family:'Cormorant Garamond', serif; font-size:15px; color:var(--white-dim); }
+.stage-item span.n { font-size:10px; color:var(--gold); letter-spacing:0.1em; }
+.stage-item.current { color:var(--white); }
+.stage-item.current span.n { color:var(--gold); font-weight:600; }
+
+.c-tl,.c-br { position:fixed; width:44px; height:44px; pointer-events:none; z-index:50; opacity:0.2; }
+.c-tl { top:72px; left:12px; border-top:1px solid var(--gold); border-left:1px solid var(--gold); }
+.c-br { bottom:12px; right:12px; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.fade-in { animation:fadeUp 0.5s ease both; }
+
+@media(max-width:768px){
+  .site-header{padding:16px 20px;}
+  .hero{padding:100px 24px 60px;}
+  .hero-meta{gap:24px;}
+  .scale-numbers{gap:3px;}
+  .scale-btn{width:28px;height:28px;font-size:10px;}
+  .nav-btn{padding:12px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="gate-screen" id="gate-screen">
+  <svg class="gate-logo" viewBox="0 0 40 40" fill="none">
+    <path d="M20 2L21.2 7.5L26.5 6.2L22.5 9.5L24.8 14.5L20 11.2L15.2 14.5L17.5 9.5L13.5 6.2L18.8 7.5Z" fill="#CF9D7B" opacity="0.85"/>
+    <path d="M5 31L5 15L20 27L35 15L35 31" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+    <path d="M10 23L20 33L30 23" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+  </svg>
+  <p class="gate-eyebrow">MIND LEGACIES · RECRUITMENT GATEWAY</p>
+  <h1 class="gate-title">By <em>Invitation</em></h1>
+  <p class="gate-desc">This gateway is invitation-only. Please enter the access code provided to you directly.</p>
+  <div class="gate-form">
+    <input type="password" class="gate-input" id="gate-input" placeholder="ACCESS CODE" autocomplete="off">
+    <button type="button" class="gate-btn" onclick="checkGatePassword()"><span>ENTER →</span></button>
+    <p class="gate-error" id="gate-error">Incorrect access code. Please try again.</p>
+  </div>
+</div>
+
+<div class="c-tl"></div>
+<div class="c-br"></div>
+
+<header class="site-header">
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+      <path d="M20 2L21.2 7.5L26.5 6.2L22.5 9.5L24.8 14.5L20 11.2L15.2 14.5L17.5 9.5L13.5 6.2L18.8 7.5Z" fill="#CF9D7B" opacity="0.85"/>
+      <path d="M5 31L5 15L20 27L35 15L35 31" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+      <path d="M10 23L20 33L30 23" stroke="#CF9D7B" stroke-width="1.4" fill="none" stroke-linecap="square"/>
+    </svg>
+    <div class="logo-text">
+      <span class="name">MIND LEGACIES</span>
+      <span class="tag">INTELLIGENCE · INNOVATION · LEGACY</span>
+    </div>
+  </div>
+  <div class="header-right">RECRUITMENT GATEWAY<br><span id="header-role-tag">HEAD MIND LEGACIES</span></div>
+</header>
+
+<div class="progress-wrap"><div class="progress-fill" id="progress"></div></div>
+
+<div class="hero" id="hero-screen">
+  <p class="hero-eyebrow">MIND LEGACIES · STAGE 1 OF RECRUITMENT</p>
+  <h1 class="hero-title">Recruitment<br><em>Gateway</em></h1>
+  <p class="hero-sub">HEAD MIND LEGACIES</p>
+  <div class="hero-vline"></div>
+  <p class="hero-desc">This gateway begins with Mind Legacies' Culture &amp; Values Screening — the primary filter before anything else about you is considered — followed by role-specific questions.</p>
+  <p class="hero-note">COMPLETION DOES NOT CONSTITUTE AN OFFER. ONLY SHORTLISTED APPLICANTS WILL BE CONTACTED REGARDING NEXT STEPS.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="val">16</span><span class="lbl">SECTIONS</span></div>
+    <div class="hero-meta-item"><span class="val">25–30</span><span class="lbl">MINUTES</span></div>
+    <div class="hero-meta-item"><span class="val">100%</span><span class="lbl">REVIEWED</span></div>
+  </div>
+  <a class="start-btn" onclick="startForm()"><span>BEGIN GATEWAY</span></a>
+</div>
+
+<div class="form-outer" id="form-screen">
+<div class="form-inner">
+<form id="main-form" action="https://formspree.io/f/xykrepln" method="POST">
+<input type="hidden" name="_subject" value="Mind Legacies — Recruitment Gateway Submission">
+<input type="hidden" name="_replyto" id="reply-to-field">
+
+<!-- SECTION 1 -->
+<div class="section-wrap" id="sec-1">
+  <p class="sec-eyebrow">SECTION 01 OF 16</p>
+  <h2 class="sec-title">Welcome to the<br><em>Gateway</em></h2>
+  <div class="sec-rule"></div>
+  <div class="info-block">
+    <p>Welcome to the Mind Legacies Recruitment Gateway.</p>
+    <p>Mind Legacies evaluates candidates by first asking whether they are the <strong style="color:var(--white)">kind of person</strong> this institution is built for — before asking whether they can do the job. The next two sections are Mind Legacies' Culture &amp; Values Screening, and they are the most important part of this gateway.</p>
+    <div class="info-callout">Completion of this gateway does not constitute an offer. It is one part of a careful, considered review process, and only shortlisted applicants will be contacted regarding next steps.</div>
+  </div>
+</div>
+
+
+<!-- SECTION 2: CULTURE RATINGS -->
+<div class="section-wrap hidden" id="sec-2">
+  <p class="sec-eyebrow">SECTION 02 OF 16</p>
+  <h2 class="sec-title">Culture &amp;<br><em>Values Screening</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">This is the most important section of the gateway. Each scenario below has two responses. Neither breaks a rule or a policy — both are answers a reasonable person could defend. Only one reflects what Mind Legacies actually values. Choose what you would genuinely do, not the answer that sounds better.</p>
+  <div id="culture-scenario-container"></div>
+</div>
+
+
+<!-- SECTION 3: CULTURE REFLECTION -->
+<div class="section-wrap hidden" id="sec-3">
+  <p class="sec-eyebrow">SECTION 03 OF 16</p>
+  <h2 class="sec-title">Culture in<br><em>Practice</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Answer from real, specific experience — not from principle.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.1</span><span class="q-text">Describe a time you raised a concern about a decision through the proper channel, rather than quietly working around it or staying silent.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="culture_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.2</span><span class="q-text">Describe a time you deliberately chose a slower or more disciplined path because you believed it would lead to a better long-term outcome.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="culture_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">3.3</span><span class="q-text">Describe a time your good work went unnoticed, but you held it to your own high standard anyway.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="culture_q3" required></textarea></div>
+</div>
+
+
+<!-- SECTION 4: VALUES IN YOUR OWN WORDS -->
+<div class="section-wrap hidden" id="sec-4">
+  <p class="sec-eyebrow">SECTION 04 OF 16</p>
+  <h2 class="sec-title">Values, in Your<br><em>Own Words</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">No options this time. Answer with your actual gut reaction or genuine belief, in your own words — not the answer you think sounds best.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.1</span><span class="q-text">Two ways to solve a problem exist: one simple and slightly less impressive-looking, one more complex and more impressive-looking — and both would work about equally well. Which would you choose, and why?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.2</span><span class="q-text">You're capable of doing something in a way that's technically "good enough," and also capable of doing it in a way that's genuinely excellent, at real additional cost to you. What actually decides which one you do?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.3</span><span class="q-text">Someone junior to you handles a disagreement with you poorly — dismissively, maybe a little disrespectfully. What's your instinctive reaction, before you've had time to compose a considered response?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.4</span><span class="q-text">If you could only be remembered for one of the following, which would it be, and why: being indispensable to this institution, or having built something here that no longer needs you?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q4" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.5</span><span class="q-text">When you're deciding something today, how far into the future do you actually think about the consequences? Answer honestly, not aspirationally.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q5" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">4.6</span><span class="q-text">What's your honest, gut-level view on how much a leader should rely on AI to make judgment calls that used to require a person's discernment?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="gut_q6" required></textarea></div>
+</div>
+
+
+<!-- SECTION 5: ABOUT MIND LEGACIES -->
+<div class="section-wrap hidden" id="sec-5">
+  <p class="sec-eyebrow">SECTION 05 OF 16</p>
+  <h2 class="sec-title">About<br><em>Mind Legacies</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">A brief reminder of who you are applying to join.</p>
+  <div class="info-block">
+    <p>Mind Legacies is a Central Intelligence Holding Company and Parent Organization dedicated to building breakthrough institutions through the disciplined scaling of human intelligence.</p>
+    <div class="info-quote"><p class="quote-text">"Only work that meets the standards of Mind Legacies deserves its name."</p></div>
+    <p>This gateway is for positions that sit within <strong style="color:var(--white)">Head Mind Legacies</strong> — not within one of its subsidiaries.</p>
+  </div>
+</div>
+
+
+<!-- SECTION 6: POSITION + CANDIDATE INFO -->
+<div class="section-wrap hidden" id="sec-6">
+  <p class="sec-eyebrow">SECTION 06 OF 16</p>
+  <h2 class="sec-title">Candidate<br><em>Information</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Please complete all fields accurately. This information is used for internal records only.</p>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">6.1</span><span class="q-text">Position You Are Applying For</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="position_applying_for" id="role-select" required onchange="onRoleChange()">
+      <option value="" disabled selected>Select a position</option>
+      <option value="Finance Lead">Finance Lead</option>
+      <option value="Executive Operations Associate">Executive Operations Associate</option>
+    </select>
+  </div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.2</span><span class="q-text">Full Name</span></div><div class="q-required">✦ REQUIRED</div><input type="text" name="full_name" placeholder="Your full name" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.3</span><span class="q-text">Email Address</span></div><div class="q-required">✦ REQUIRED</div><input type="email" name="email" placeholder="your@email.com" required oninput="document.getElementById('reply-to-field').value=this.value"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.4</span><span class="q-text">Phone Number</span></div><div class="q-required">✦ REQUIRED</div><input type="tel" name="phone" placeholder="+27 XX XXX XXXX" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.5</span><span class="q-text">LinkedIn Profile URL</span></div><div class="q-optional">OPTIONAL BUT RECOMMENDED</div><input type="text" name="linkedin" placeholder="https://linkedin.com/in/yourprofile"></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.6</span><span class="q-text">Location (City &amp; Province)</span></div><div class="q-required">✦ REQUIRED</div><input type="text" name="location" placeholder="e.g. Pretoria, Gauteng" required></div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">6.7</span><span class="q-text">Highest Qualification</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="qualification" required>
+      <option value="">Select qualification</option>
+      <option>Matric</option><option>Certificate</option><option>Diploma</option>
+      <option>Bachelor's Degree</option><option>Honours</option><option>Master's Degree</option>
+      <option>Doctorate</option><option>Other</option>
+    </select>
+  </div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.8</span><span class="q-text">Current Occupation</span></div><div class="q-required">✦ REQUIRED</div><input type="text" name="occupation" placeholder="Your current role or status" required></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">6.9</span><span class="q-text">Availability</span></div><div class="q-note">Hours per week, and earliest start date.</div><div class="q-required">✦ REQUIRED</div><input type="text" name="availability" placeholder="e.g. 10 hrs/week, available from 01/09/2026" required></div>
+</div>
+
+
+<!-- SECTION 7: WORK ENVIRONMENT -->
+<div class="section-wrap hidden" id="sec-7">
+  <p class="sec-eyebrow">SECTION 07 OF 16</p>
+  <h2 class="sec-title">Work<br><em>Environment</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">This is a remote position. Please answer honestly — these details are used to plan realistically, not to screen out candidates over connectivity issues beyond their control.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">7.1</span><span class="q-text">Describe your work space. Where would you actually be working from day to day?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="workspace_description" required placeholder="e.g. a dedicated home office, a shared space, a laptop wherever there's quiet, etc."></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">7.2</span><span class="q-text">What is your approximate internet speed?</span></div><div class="q-note">Download speed in Mbps if you know it — check at fast.com or speedtest.net if you're unsure. This is needed for planning.</div><div class="q-required">✦ REQUIRED</div><input type="text" name="wifi_speed" placeholder="e.g. 25 Mbps, or 'not sure'" required></div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">7.3</span><span class="q-text">How familiar are you with Claude?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="familiarity_claude" required>
+      <option value="">Select familiarity level</option>
+      <option>Never used it</option><option>Basic — used it a few times</option>
+      <option>Comfortable — use it regularly</option><option>Advanced — use it daily for real work</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">7.4</span><span class="q-text">How familiar are you with ChatGPT?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="familiarity_chatgpt" required>
+      <option value="">Select familiarity level</option>
+      <option>Never used it</option><option>Basic — used it a few times</option>
+      <option>Comfortable — use it regularly</option><option>Advanced — use it daily for real work</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">7.5</span><span class="q-text">How familiar are you with Excel?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="familiarity_excel" required>
+      <option value="">Select familiarity level</option>
+      <option>Never used it</option><option>Basic — simple formulas and formatting</option>
+      <option>Comfortable — pivot tables, lookups, moderate formulas</option><option>Advanced — complex formulas, macros, or modeling</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">7.6</span><span class="q-text">How familiar are you with Microsoft 365 (Word, Outlook, Teams, SharePoint)?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="familiarity_m365" required>
+      <option value="">Select familiarity level</option>
+      <option>Never used it</option><option>Basic</option>
+      <option>Comfortable — use it regularly</option><option>Advanced — power user</option>
+    </select>
+  </div>
+  <div class="question-block">
+    <div class="q-label"><span class="q-num">7.7</span><span class="q-text">How familiar are you with Google Drive (Docs, Sheets, Slides)?</span></div>
+    <div class="q-required">✦ REQUIRED</div>
+    <select name="familiarity_gdrive" required>
+      <option value="">Select familiarity level</option>
+      <option>Never used it</option><option>Basic</option>
+      <option>Comfortable — use it regularly</option><option>Advanced — power user</option>
+    </select>
+  </div>
+</div>
+
+
+<!-- SECTION 8: ABOUT THE POSITION (DYNAMIC) -->
+<div class="section-wrap hidden" id="sec-8">
+  <p class="sec-eyebrow">SECTION 08 OF 16</p>
+  <h2 class="sec-title">About the<br><em>Position</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Understanding the office you would be joining.</p>
+  <div class="info-block" id="about-position-content"><p style="color:var(--silver);">Please select a position in Section 05 to view details.</p></div>
+</div>
+
+
+<!-- SECTION 9: GROWTH OPPORTUNITY (DYNAMIC) -->
+<div class="section-wrap hidden" id="sec-9">
+  <p class="sec-eyebrow">SECTION 09 OF 16</p>
+  <h2 class="sec-title">Growth<br><em>Opportunity</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Understanding how progression works within this office.</p>
+  <div class="info-block">
+    <p>This is a founding volunteer opportunity. As Mind Legacies grows, Executive Offices will mature into larger institutional leadership offices.</p>
+    <div class="progression" id="growth-ladder-content"></div>
+    <p>Advancement is earned through demonstrated excellence and consistent contribution. It is never guaranteed.</p>
+  </div>
+</div>
+
+
+<!-- SECTION 10: UNDERSTANDING THE ROLE -->
+<div class="section-wrap hidden" id="sec-10">
+  <p class="sec-eyebrow">SECTION 10 OF 16</p>
+  <h2 class="sec-title">Understanding<br><em>the Role</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Please answer thoughtfully and in your own voice.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.1</span><span class="q-text">Why are you interested in joining Head Mind Legacies?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="role_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.2</span><span class="q-text">What attracted you to <span id="role-inline-1">this role</span> specifically?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="role_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.3</span><span class="q-text">What do you believe someone in <span id="role-inline-2">this role</span> actually does, day to day?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="role_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">10.4</span><span class="q-text">What strengths would help you succeed in this position?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="role_q4" required></textarea></div>
+</div>
+
+
+<!-- SECTION 11: OPERATIONAL THINKING -->
+<div class="section-wrap hidden" id="sec-11">
+  <p class="sec-eyebrow">SECTION 11 OF 16</p>
+  <h2 class="sec-title">Operational<br><em>Thinking</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">These scenario questions assess how you think under real operational pressure.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">11.1</span><span class="q-text">You receive three urgent requests simultaneously. How would you approach prioritizing them?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="op_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">11.2</span><span class="q-text">An important deliverable is due in one hour, but you discover key information is missing. What steps would you take?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="op_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">11.3</span><span class="q-text">You notice an inconsistency in organizational information you're responsible for. How would you handle it?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="op_q3" required></textarea></div>
+</div>
+
+
+<!-- SECTION 12: SYSTEMS & ORGANIZATION -->
+<div class="section-wrap hidden" id="sec-12">
+  <p class="sec-eyebrow">SECTION 12 OF 16</p>
+  <h2 class="sec-title">Systems<br>&amp; <em>Organization</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Tell us about your approach to planning, documentation, and detail — then rate yourself honestly below.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.1</span><span class="q-text">Describe your approach to planning and record keeping. Give a real example from previous experience.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="sys_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">12.2</span><span class="q-text">Describe a time you had to coordinate information or a decision across multiple people. What did you do to keep it organized?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="sys_q2" required></textarea></div>
+  <div id="systems-scale-container"></div>
+</div>
+
+
+<!-- SECTION 13: LEADERSHIP & CULTURE -->
+<div class="section-wrap hidden" id="sec-13">
+  <p class="sec-eyebrow">SECTION 13 OF 16</p>
+  <h2 class="sec-title">Leadership<br>&amp; <em>Culture</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">Answer from real experience.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">13.1</span><span class="q-text">Describe a situation where you improved an existing process.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="lead_q1" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">13.2</span><span class="q-text">How do you handle constructive feedback?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="lead_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">13.3</span><span class="q-text">How do you respond when expectations are extremely high?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="lead_q3" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">13.4</span><span class="q-text">Describe a time when organization or discipline made a significant difference to an outcome.</span></div><div class="q-required">✦ REQUIRED</div><textarea name="lead_q4" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">13.5</span><span class="q-text">What does professionalism mean to you?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="lead_q5" required></textarea></div>
+</div>
+
+
+<!-- SECTION 14: FINAL REFLECTION -->
+<div class="section-wrap hidden" id="sec-14">
+  <p class="sec-eyebrow">SECTION 14 OF 16</p>
+  <h2 class="sec-title">Final<br><em>Reflection</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">This is your opportunity to speak directly to who you intend to be within this institution.</p>
+  <div class="question-block"><div class="q-label"><span class="q-num">14.1</span><span class="q-text">Why do you believe you would be a valuable addition to Head Mind Legacies?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="final_q1" required style="min-height:150px;"></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">14.2</span><span class="q-text">If appointed, what would your first thirty days look like?</span></div><div class="q-required">✦ REQUIRED</div><textarea name="final_q2" required></textarea></div>
+  <div class="question-block"><div class="q-label"><span class="q-num">14.3</span><span class="q-text">Is there anything else you would like the Executive Team to know?</span></div><div class="q-note">Optional.</div><textarea name="final_q3"></textarea></div>
+</div>
+
+
+<!-- SECTION 15: CANDIDATE CONFIRMATION -->
+<div class="section-wrap hidden" id="sec-15">
+  <p class="sec-eyebrow">SECTION 15 OF 16</p>
+  <h2 class="sec-title">Candidate<br><em>Confirmation</em></h2>
+  <div class="sec-rule"></div>
+  <p class="sec-desc">You must confirm your understanding of all items below before proceeding. All checkboxes are required.</p>
+  <div class="confirm-list">
+    <label class="confirm-item"><input type="checkbox" name="confirm_honest" value="Confirmed" required><span class="confirm-text">I have answered the Culture &amp; Values Screening honestly, rather than aspirationally.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_gateway" value="Confirmed" required><span class="confirm-text">I understand this gateway does not constitute an offer, and that only shortlisted applicants will be contacted.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_headml" value="Confirmed" required><span class="confirm-text">I understand this role belongs to Head Mind Legacies, not to a subsidiary.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_knowledge" value="Confirmed" required><span class="confirm-text">I understand that access to organizational knowledge is restricted to what my responsibilities require.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_confidentiality" value="Confirmed" required><span class="confirm-text">I understand and accept Mind Legacies' confidentiality expectations, including signing an NDA where required.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_conduct" value="Confirmed" required><span class="confirm-text">I understand and will uphold Mind Legacies' expectations of professional conduct and respectful communication.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_authority" value="Confirmed" required><span class="confirm-text">I understand and will respect the organization's authority and governance structure.</span></label>
+    <label class="confirm-item"><input type="checkbox" name="confirm_sharing" value="Confirmed" required><span class="confirm-text">I understand that I may not share organizational information without authorization.</span></label>
+  </div>
+</div>
+
+
+<!-- SECTION 16: BEFORE YOU SUBMIT -->
+<div class="section-wrap hidden" id="sec-16">
+  <p class="sec-eyebrow">SECTION 16 OF 16</p>
+  <h2 class="sec-title">Before You<br><em>Submit</em></h2>
+  <div class="sec-rule"></div>
+  <div class="info-block">
+    <p>Mind Legacies recruitment proceeds through the following stages:</p>
+    <div class="stage-list">
+      <div class="stage-item current"><span class="n">01–02</span> Application &amp; Culture Screening (this gateway)</div>
+      <div class="stage-item"><span class="n">03</span> Skills Assessment</div>
+      <div class="stage-item"><span class="n">04</span> Interview</div>
+      <div class="stage-item"><span class="n">05</span> Practical Exercise</div>
+      <div class="stage-item"><span class="n">06</span> Offer</div>
+      <div class="stage-item"><span class="n">07</span> Institutional &amp; Confidentiality Agreements</div>
+      <div class="stage-item"><span class="n">08</span> Onboarding</div>
+      <div class="stage-item"><span class="n">09</span> Probation</div>
+      <div class="stage-item"><span class="n">10</span> Confirmation</div>
+    </div>
+  </div>
+  <div style="padding:28px;border:1px solid var(--gold-dim);background:var(--gold-ghost);margin-top:24px;">
+    <p style="font-size:8px;letter-spacing:0.4em;color:var(--gold);margin-bottom:12px;">READY TO SUBMIT</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--white-dim);line-height:1.7;">Please review your responses before submitting. Every submission is reviewed carefully. Suitable candidates will be invited to the next stage. Thank you for your interest in Mind Legacies.</p>
+  </div>
+</div>
+
+<div class="form-nav">
+  <div class="nav-info">SECTION <span id="current-sec-display">1</span> OF <span>16</span></div>
+  <div class="nav-btns">
+    <button type="button" class="nav-btn" id="btn-back" onclick="goBack()" style="display:none;">← BACK</button>
+    <button type="button" class="nav-btn primary" id="btn-next" onclick="goNext()"><span>CONTINUE →</span></button>
+    <button type="submit" class="nav-btn primary" id="btn-submit" style="display:none;"><span>SUBMIT GATEWAY →</span></button>
+  </div>
+</div>
+
+</form>
+</div>
+</div>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">✦</div>
+  <h2 class="success-title">Gateway<br><em>Received</em></h2>
+  <div class="success-rule"></div>
+  <p class="success-body">Thank you for completing the Mind Legacies Recruitment Gateway. Your responses will be reviewed carefully, beginning with the Culture &amp; Values Screening.</p>
+  <div class="success-rule"></div>
+  <p class="success-body">Only shortlisted applicants will be contacted regarding next steps.</p>
+</div>
+
+<script>
+const GATE_PASSWORD = "MLGATE2026";
+function checkGatePassword() {
+  const input = document.getElementById('gate-input');
+  const error = document.getElementById('gate-error');
+  if (input.value.trim().toLowerCase() === GATE_PASSWORD.toLowerCase()) {
+    document.getElementById('gate-screen').classList.add('hidden');
+    error.classList.remove('show');
+  } else {
+    error.classList.add('show'); input.value=''; input.focus();
+  }
+}
+document.getElementById('gate-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkGatePassword(); });
+
+// ---- ROLE DATA (only the selected role's content is ever shown) ----
+const ROLES = {
+  "Finance Lead": {
+    tag: "FINANCE OFFICE",
+    office: "Finance Office",
+    intro: "The Finance Lead serves within the Finance Office, working directly for Mind Legacies at the parent level — not within a subsidiary.",
+    responsibilities: [
+      "Own financial governance, reporting, and stewardship for Mind Legacies",
+      "Maintain accurate financial records and controls",
+      "Support budgeting, forecasting, and financial planning",
+      "Ensure financial decisions align with the Constitutional Doctrine's standard of long-term integrity",
+      "Report financial position clearly to the President and Executive Team"
+    ],
+    focus: "This position focuses on financial discipline, accuracy, and long-term institutional stewardship.",
+    ladder: ["Finance Lead","Senior Finance Lead","Finance Manager","Director of Finance"]
+  },
+  "Executive Operations Associate": {
+    tag: "OFFICE OF EXECUTIVE ADMINISTRATION",
+    office: "Office of Executive Administration",
+    intro: "The Executive Operations Associate serves within the Office of Executive Administration, working directly for Mind Legacies at the parent level — not within a subsidiary.",
+    responsibilities: [
+      "Coordinate executive operations",
+      "Maintain organizational clarity",
+      "Manage executive documentation",
+      "Oversee reporting systems",
+      "Enable the effectiveness of the Executive Team"
+    ],
+    focus: "This position focuses on creating order, coordination, and consistency across the organization.",
+    ladder: ["Executive Operations Associate","Executive Operations Specialist","Senior Executive Operations Officer","Manager, Office of Executive Administration","Director of Executive Administration"]
+  }
+};
+
+function onRoleChange() {
+  const val = document.getElementById('role-select').value;
+  const role = ROLES[val];
+  document.getElementById('header-role-tag').textContent = role ? role.tag : 'HEAD MIND LEGACIES';
+  const aboutEl = document.getElementById('about-position-content');
+  const ladderEl = document.getElementById('growth-ladder-content');
+  document.getElementById('role-inline-1').textContent = val || 'this role';
+  document.getElementById('role-inline-2').textContent = val ? 'the ' + val : 'this role';
+  if(!role){ return; }
+  aboutEl.innerHTML = `
+    <p>${role.intro}</p>
+    <p>The office exists to:</p>
+    <ul>${role.responsibilities.map(r=>`<li>${r}</li>`).join('')}</ul>
+    <p>${role.focus}</p>`;
+  ladderEl.innerHTML = role.ladder.map((title,i)=>`
+    <div class="prog-item${i===0?'':''}" style="${i===0?'background:var(--surf);':''}">
+      <div class="prog-title" style="${i===0?'color:var(--gold);font-weight:500;':''}">${title}</div>
+      ${i<role.ladder.length-1?'<span class="prog-arrow">↓</span>':''}
+    </div>`).join('');
+}
+
+// ---- CULTURE & VALUES: FORCED-CHOICE SCENARIOS ----
+// Both options are written to sound reasonable. Only one is Mind Legacies-aligned
+// (per the Constitutional Doctrine chapter noted). Order of aligned/misaligned is
+// varied item to item so there is no pattern to learn.
+const cultureScenarios = [
+  { num:'2.1', name:'scenario_1', prompt:"You're stretched thin this week, and one task assigned to you would take real, careful effort to do properly. Nobody would notice if you did a lighter version and moved on to work you find more energizing. What do you do?",
+    options:[
+      { text:"I do a reasonably good job on it, then move my energy to the work that keeps me effective long-term.", aligned:false },
+      { text:"I complete it properly regardless of how I feel that week — the standard doesn't move with my energy.", aligned:true }
+    ]},
+  { num:'2.2', name:'scenario_2', prompt:"You strongly disagree with a decision made by someone senior to you, and you're confident you're right. Time is tight, and doing it your way would clearly get a better result today.",
+    options:[
+      { text:"I raise my disagreement through the proper channel first, even if it costs time today.", aligned:true },
+      { text:"I do it my way quietly and explain afterward if anyone asks — the outcome matters more than the process.", aligned:false }
+    ]},
+  { num:'2.3', name:'scenario_3', prompt:"A fast decision right now would look decisive and keep visible momentum going, but you haven't actually had time to think it through properly.",
+    options:[
+      { text:"I make the call now — momentum matters, and I can course-correct later if needed.", aligned:false },
+      { text:"I take the extra time to think it through, even if it costs some visible momentum.", aligned:true }
+    ]},
+  { num:'2.4', name:'scenario_4', prompt:"You did excellent, high-impact work that nobody has noticed yet. An easy opportunity comes up to make sure leadership knows it was you — nothing dishonest, just a bit more visible than the situation strictly requires.",
+    options:[
+      { text:"I let the work speak for itself and don't go out of my way to secure the credit.", aligned:true },
+      { text:"I make sure my contribution is visible — recognition earned should be recognition claimed.", aligned:false }
+    ]},
+  { num:'2.5', name:'scenario_5', prompt:"An exciting, lucrative opportunity comes up that would require cutting a governance step 'just this once,' and would clearly grow the institution faster.",
+    options:[
+      { text:"I pursue it — growth like this doesn't come around twice, and we can formalize the governance side after.", aligned:false },
+      { text:"I decline or delay it until it can be done without compromising governance, even if that means missing the window.", aligned:true }
+    ]},
+  { num:'2.6', name:'scenario_6', prompt:"A senior leader you respect personally asks you, informally, to bend a standard 'just this once' as a favor to them — nothing that breaks a hard rule, just something the institution's normal standard wouldn't do.",
+    options:[
+      { text:"I do it — loyalty to the people who lead this place matters, and it's a small thing.", aligned:false },
+      { text:"I decline, even though it's uncomfortable — the standard doesn't bend because of who's asking.", aligned:true }
+    ]},
+  { num:'2.7', name:'scenario_7', prompt:"A former colleague, now somewhere friendly and unrelated, asks an informal question that touches on something you learned inside the institution. Answering fully would genuinely help them and doesn't seem to hurt anyone.",
+    options:[
+      { text:"I keep it to myself, or check first, even though it feels like a small and harmless favor.", aligned:true },
+      { text:"I share what's useful — it's a small thing between people who trust each other.", aligned:false }
+    ]},
+  { num:'2.8', name:'scenario_8', prompt:"You're finishing a project and excited to move on to something new. Properly documenting the handover will take real extra time, and nobody is currently asking you for it.",
+    options:[
+      { text:"I move on and document it later if it becomes necessary — the next thing needs my energy more right now.", aligned:false },
+      { text:"I do the handover properly before I move on, even though nobody's asking and it delays my start elsewhere.", aligned:true }
+    ]},
+  { num:'2.9', name:'scenario_9', prompt:"You inherited a system someone senior built, and you're confident you've found a better way. Raising it might come across as implicitly critical of the person who built it.",
+    options:[
+      { text:"I hold back for now to avoid friction, and revisit it only once it's clearly necessary.", aligned:false },
+      { text:"I raise it anyway, clearly and respectfully — the system improving matters more than anyone's feelings about it, including mine.", aligned:true }
+    ]},
+  { num:'2.10', name:'scenario_10', prompt:"A decision would clearly look good on your own track record in the short term, but you're not fully convinced it's right for the institution's longer-term position.",
+    options:[
+      { text:"I raise my reservations even though it might cost me some short-term credit for moving fast.", aligned:true },
+      { text:"I go along with it — it's a reasonable call, and being seen to deliver matters for what I can contribute long-term.", aligned:false }
+    ]},
+];
+
+function renderScenarios(containerId, scenarios) {
+  const container = document.getElementById(containerId);
+  scenarios.forEach(s => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    const opts = s.options.map((o,i) => `
+      <label class="option-item">
+        <input type="radio" name="${s.name}" value="${o.text.replace(/"/g,'&quot;')}" ${i===0?'required':''}>
+        <span class="option-label">${o.text}</span>
+      </label>`).join('');
+    block.innerHTML = `
+      <div class="q-label"><span class="q-num">${s.num}</span><span class="q-text">${s.prompt}</span></div>
+      <div class="q-required">✦ REQUIRED</div>
+      <div class="options-list">${opts}</div>`;
+    container.appendChild(block);
+  });
+}
+renderScenarios('culture-scenario-container', cultureScenarios);
+
+// ---- SCALE (1-10) QUESTIONS ----
+const systemsStatements = [
+  { num:'12.3', name:'scale_attention',     label:'Attention to Detail' },
+  { num:'12.4', name:'scale_documentation', label:'Documentation Quality' },
+  { num:'12.5', name:'scale_planning',      label:'Planning & Prioritization' },
+  { num:'12.6', name:'scale_communication', label:'Written Communication' },
+  { num:'12.7', name:'scale_composure',     label:'Composure Under Pressure' },
+];
+
+const scaleValues = {};
+function renderScaleGroup(containerId, questions, lowLabel, highLabel) {
+  const container = document.getElementById(containerId);
+  questions.forEach(q => {
+    scaleValues[q.name] = 0;
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = `
+      <div class="q-label"><span class="q-num">${q.num}</span><span class="q-text">${q.label}</span></div>
+      <div class="q-required">✦ REQUIRED</div>
+      <input type="hidden" name="${q.name}" id="${q.name}" required>
+      <div class="scale-wrap">
+        <span class="scale-label">1 — ${lowLabel}</span>
+        <div class="scale-numbers" id="scale-${q.name}">
+          ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="scale-btn" data-scale="${q.name}" data-val="${n}" onclick="selectScale('${q.name}',${n},this)">${n}</button>`).join('')}
+        </div>
+        <span class="scale-label">10 — ${highLabel}</span>
+      </div>`;
+    container.appendChild(block);
+  });
+}
+renderScaleGroup('systems-scale-container', systemsStatements, 'LOW', 'HIGH');
+
+function selectScale(name, val, btn) {
+  scaleValues[name] = val;
+  document.getElementById(name).value = val;
+  document.querySelectorAll(`[data-scale="${name}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+let currentSec = 1;
+const totalSecs = 16;
+
+function startForm() {
+  document.getElementById('hero-screen').style.display = 'none';
+  document.getElementById('form-screen').classList.add('active');
+  showSection(1);
+  updateProgress();
+}
+
+function showSection(n) {
+  for(let i=1; i<=totalSecs; i++) {
+    const el = document.getElementById(`sec-${i}`);
+    if(el) el.classList.add('hidden');
+  }
+  const target = document.getElementById(`sec-${n}`);
+  if(target) { target.classList.remove('hidden'); target.classList.add('fade-in'); }
+  document.getElementById('current-sec-display').textContent = n;
+  document.getElementById('btn-back').style.display = n > 1 ? 'block' : 'none';
+  document.getElementById('btn-next').style.display = n < totalSecs ? 'block' : 'none';
+  document.getElementById('btn-submit').style.display = n === totalSecs ? 'block' : 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateProgress() {
+  const pct = ((currentSec - 1) / totalSecs) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function validateSection(n) {
+  const sec = document.getElementById(`sec-${n}`);
+  if(!sec) return true;
+  const required = sec.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(el => {
+    if(el.type === 'checkbox') {
+      if(!el.checked) { el.parentElement.style.borderColor='rgba(139,32,32,0.5)'; valid=false; }
+      else { el.parentElement.style.borderColor=''; }
+    } else if(el.type === 'radio') {
+      const name = el.name;
+      const checked = sec.querySelector(`[name="${name}"]:checked`);
+      if(!checked) { valid=false; }
+    } else {
+      if(!el.value.trim()) { el.classList.add('invalid'); valid=false; }
+      else { el.classList.remove('invalid'); }
+    }
+  });
+  if(n === 12) { systemsStatements.forEach(q => { if(!scaleValues[q.name]) valid = false; }); }
+  if(!valid) {
+    const firstInvalid = sec.querySelector('[required]:invalid, .invalid, input[type=checkbox]');
+    if(firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  return valid;
+}
+
+function goNext() {
+  if(!validateSection(currentSec)) return;
+  if(currentSec < totalSecs) { currentSec++; showSection(currentSec); updateProgress(); }
+}
+function goBack() {
+  if(currentSec > 1) { currentSec--; showSection(currentSec); updateProgress(); }
+}
+
+document.getElementById('main-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if(!validateSection(currentSec)) return;
+
+  const btn = document.getElementById('btn-submit');
+  btn.innerHTML = '<span>SUBMITTING...</span>';
+  btn.disabled = true;
+
+  try {
+    const formData = new FormData(this);
+    const response = await fetch('https://formspree.io/f/xykrepln', { method:'POST', body: formData, headers:{ 'Accept':'application/json' } });
+    if(response.ok) {
+      document.getElementById('form-screen').classList.remove('active');
+      document.getElementById('success-screen').classList.add('active');
+      document.getElementById('progress').style.width = '100%';
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else { throw new Error('Submission failed'); }
+  } catch(err) {
+    btn.innerHTML = '<span>SUBMIT GATEWAY →</span>';
+    btn.disabled = false;
+    alert('There was an error submitting your gateway. Please try again.');
+  }
+});
+</script>
+</body>
+</html>
