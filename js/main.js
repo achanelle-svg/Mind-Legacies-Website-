@@ -12,8 +12,8 @@ const ROLES = {
     title: 'President &amp; Chief Cognitive Architect',
     id: 'HEAD-ML',
     status: 'filled',
-    name: 'A.Chanelle Pitso',
-    body: `<p>A.Chanelle Pitso leads Mind Legacies as President and Chief Cognitive Architect, and is the doctrine and architecture designer behind SYNAPSIS.</p>`
+    name: 'A.Chanelle Clement',
+    body: `<p>A.Chanelle Clement leads Mind Legacies as President and Chief Cognitive Architect, and is the doctrine and architecture designer behind SYNAPSIS.</p>`
   },
   'coo': {
     title: 'Chief Operating Officer',
